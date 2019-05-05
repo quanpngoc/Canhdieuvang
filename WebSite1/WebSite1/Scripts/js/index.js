@@ -77,7 +77,7 @@ $(document).ready(function () {
         }
     });
 
-    $checkNavPos();
+    checkNavPos();
     function checkNavPos(){
         if($(this).scrollTop()>=60){
             $('.navbar').addClass('fixNav');

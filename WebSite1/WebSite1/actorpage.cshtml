@@ -1,278 +1,131 @@
-﻿<html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="lib/swiper-4.4.2/dist/css/swiper.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-<link rel="stylesheet" href="lib/bootstrap-3.1.1-dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="lib/footer.css" />
-<link rel="stylesheet" href="css/main.css" />
-<link rel="stylesheet" href="css/actor.css" />
-<title>Actor Page</title>
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="./index.cshtml">
-                    <img src="img/nav-logo-1.png">
-                </a>
+﻿@{
+    Layout = "_Layout.cshtml";
+    Page.Title = "Thông tin diễn viên - Giải thưởng cánh diều vàng ";
+}
+
+<!--Style for element in page-->
+@section styles {
+    <link rel="stylesheet" href="~/Content/css/actor.css" />
+}
+
+<!--Begin page content-->
+<section class="actor-info">
+    <div class="container-fluid">
+        <div class="actor-avatar col-md-4">
+            <img src="./~/Images/actor/nha-phuong.jpg">
+        </div>
+        <div class="actor-info-content col-md-8">
+            <h3 class="name">Nhã Phương</h3>
+            <div class="basic-info col-md-6">
+                <p class="text">Tên thật: Trần Thị Nhã Phương</p>
+                <p class="text">biệt danh: Nabi Nhã Phương</p>
+                <p class="text">Ngày sinh: ngày 20 tháng 5 năm 1990</p>
+                <p class="text">Cô được biết đến qua các phim như Những thiên thần áo trắng, Gia đình số đỏ, Hoa nắng, Cô nàng nặng cân, Quả tim máu, Vừa đi vừa khóc, Tuổi thanh xuân, Ngày ấy mình đã yêu...</p>
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="./index.cshtml">TRANG CHỦ</a></li>
-                    <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
-                    <li><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
-                    <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
-                </ul>
-            </div>
-            <div class="user-avatar">
-                <a><img src="img/user-black.png"></a>
+            <div class="more-info col-md-6">
+                <p class="text">Nhã Phương quê tại Đắk Lắk. Cô học tại Đại học Sân khấu Điện ảnh TPHCM, từng tham gia đóng một số phim. Nhã Phương được khán giả biết đến qua phim ngắn “Xin lỗi, anh chỉ là thằng bán bánh giò” năm 2013. Nhã Phương sau đó tham gia các phim Tuổi thanh xuân, Quả tim máu; vai diễn chị Thêu trong Vừa đi vừa khóc đã giúp cô trở thành một trong những diễn viên trẻ triển vọng của điện ảnh Việt Nam.</p>
             </div>
         </div>
-    </nav>
-    <section class="actor-info">
-        <div class="container-fluid">
-            <div class="actor-avatar col-md-4">
-                <img src="./img/actor/nha-phuong.jpg">
-            </div>
-            <div class="actor-info-content col-md-8">
-                <h3 class="name">Nhã Phương</h3>
-                <div class="basic-info col-md-6">
-                    <p class="text">Tên thật: Trần Thị Nhã Phương</p>
-                    <p class="text">biệt danh: Nabi Nhã Phương</p>
-                    <p class="text">Ngày sinh: ngày 20 tháng 5 năm 1990</p>
-                    <p class="text">Cô được biết đến qua các phim như Những thiên thần áo trắng, Gia đình số đỏ, Hoa nắng, Cô nàng nặng cân, Quả tim máu, Vừa đi vừa khóc, Tuổi thanh xuân, Ngày ấy mình đã yêu...</p>
-                </div>
-                <div class="more-info col-md-6">
-                    <p class="text">Nhã Phương quê tại Đắk Lắk. Cô học tại Đại học Sân khấu Điện ảnh TPHCM, từng tham gia đóng một số phim. Nhã Phương được khán giả biết đến qua phim ngắn “Xin lỗi, anh chỉ là thằng bán bánh giò” năm 2013. Nhã Phương sau đó tham gia các phim Tuổi thanh xuân, Quả tim máu; vai diễn chị Thêu trong Vừa đi vừa khóc đã giúp cô trở thành một trong những diễn viên trẻ triển vọng của điện ảnh Việt Nam.</p>
-                </div>
-            </div>
+    </div>
+</section>
+<section class="artist">
+    <div class="container">
+        <h3 class="title">Tóm tắt quá trình hoạt động nghệ thuật</h3>
+        <div class="content">
+            <p class="text-title">Ban đầu</p>
+            <p class="text">Các phim Nhã Phương tham gia có thể kể đến như Những Thiên Thần Áo Trắng, Hoàng Tử Xấu Trai, Hoa Nắng, Trường Nội Trú…</p>
+            <p class="text">Góp mặt trong những bộ phim truyền hình này, Nhã Phương đóng vai đúng với lứa tuổi cô lúc bấy giờ - một học sinh. Tuy chỉ là những vai nhỏ, nhưng cô cũng đã thể hiện được tiềm năng diễn xuất của mình. Thời điểm đó, Nhã Phương diễn cảnh khóc đã rất có hồn.</p>
+            <p class="text">Sau đó, cô tham gia hai bộ phim với tuýp nhân vật khác hẳn với những vai trước đó. Một là quận chúa trong Anh Chàng Vượt Thời Gian và một là cô gái miền biển ngây thơ, trong sáng trong Cát Nóng. Hai phim này đều xếp vào hàng “thảm họa” nhưng diễn xuất của Nhã Phương vẫn được công nhận.</p>
+            <p class="text-title">Vụt sáng sau "Xin lỗi, anh chỉ là thằng bán bánh giò"</p>
+            <p class="text">Dù tham gia nhiều phim như vậy nhưng phải mãi đến khi tham gia phim ngắn Xin Lỗi, Anh Chỉ Là Thằng Bán Bánh Giò, Nhã Phương mới thực sự trở nên nổi tiếng. Cô vào vai cô gái bán bánh tráng, có một tình yêu đẹp và buồn với chàng trai bán bánh giò.</p>
+            <p class="text">Ngay sau khi bộ phim được tung lên mạng Youtube, sức hút và sự lan truyền của bộ phim có lẽ cũng khiến chính Nhã Phương kinh ngạc. Cô được người xem ưu ái gọi với cái tên “hot girl bánh tráng” và từ một diễn viên không mấy tiếng tăm, Nhã Phương nổi tiếng và có thêm nhiều người hâm mộ. Tuy nhiên, thành công này cũng bắt nguồn từ diễn xuất chân thực, cảm động của Nhã Phương trong phim.</p>
+
+            <p class="text-title">Thành công với "Vừa đi vừa khóc", "Quả tim máu" và các dự án phim khác</p>
+            <p class="text">Sau Xin Lỗi, Anh Chỉ Là Thằng Bán Bánh Giò, Nhã Phương cứ thế thẳng tiến trong sự nghiệp diễn xuất của mình. Cô liên tiếp gặt hái thành công khi tham gia Vừa Đi Vừa Khóc và Quả Tim Máu.</p>
+
+            <p class="text">Ở phim truyền hình Vừa Đi Vừa Khóc, Nhã Phương vào vai Thêu - cô gái đanh đá, mê trai điên cuồng, luôn bám theo trai (Minh Hằng) để chăm sóc. Nhã Phương đã thể hiện một Thêu lém lỉnh, hài hước, đôi lúc lại rất vô duyên khiến khán giả vô cùng thích thú. Có những giai đoạn, vai Thêu của Nhã Phương còn nổi bật hơn cả cặp nhân vật chính.</p>
+
+            <p class="text">Nhã Phương nhận lời tham gia phim kinh dị Quả Tim Máu, Nhã Phương chứng tỏ cô đã trưởng thành trong diễn xuất. Có thể nói, đây là vai diễn nặng ký nhất của Nhã Phương từ trước tới giờ. Bởi vai diễn này không nhí nhảnh và tươi vui như dạng vai quen thuộc của cô, Quả Tim Máu đòi hỏi Nhã Phương phải diễn có chiều sâu hơn. Và một lần nữa, Nhã Phương lại thành công với khả năng diễn xuất của mình.</p>
+
+            <p class="text-title">Nỗ lực không ngừng nghỉ để mang đến thành công</p>
+            <p class="text">Cô và bạn diễn trẻ hơn bốn tuổi Kang Tae Oh đã trở thành cặp đôi làm mưa làm gió trong phim Tuổi thanh xuân. Cả cô và Kang Tae Oh đều nhận được giải nam, nữ diễn viên ấn tượng. Dù hơn tuổi bạn diễn nhưng rất khó để nhận ra điều đó vì sự tươi trẻ của cô. Ngoài ra, cô còn hi sinh rất nhiều:</p>
+
+            <ul>
+                <li>Cái tát của mẹ Phong (NSND Minh Châu) trong phim. Thực chất ở ngoài cũng chẳng nhẹ hơn là bao do cô chấp nhận để mang lại hiệu quả tốt nhất cho bộ phim.</li>
+
+                <li>Ai cũng nghĩ rằng được đi nước ngoài rất thích nhưng chẳng mấy ai biết được khi quay ở Hàn Quốc và Nhật Bản cô phải làm việc tới 20 tiếng và chịu đựng cái rét dưới 0 độ.</li>
+
+                <li>Trong cảnh quay Cynthia lái xe đâm Linh (Nhã Phương), diễn biến phim là khi xe của Cynthia chưa đi tới thì Junsu đã kịp thời xuất hiện đẩy Linh ra. Tuy nhiên trong một lần quay hỏng, bạn diễn nhấn ga quá đà khiến xe không kịp dừng và đâm vào người Nhã Phương. Nữ diễn viên bất ngờ và ngã bật ra sau. </li>
+
+                <li>Để có những cảnh quay chân thực nhất, các diễn viên gần như diễn thật ở những cảnh xung đột, xô đẩy. Trong phim Linh bị "hành" như thế nào thì ngoài đời Nhã Phương cũng chịu khổ y như vậy. Để có được cảnh quay "anh hùng cứu mỹ nhân" này, Nhã Phương đã chịu nhiều cú xô khá mạnh của Kang Tae Oh. </li>
+
+                <li>Khi quay cảnh Linh bị người đi đường va vào làm rơi điện thoại, Nhã Phương đã cho đoàn làm phim mượn chính chiếc điện thoại của mình. Vì quay đi quay lại nhiều lần cảnh rơi nên chiếc điện thoại của cô nàng đã bị hỏng khi quay xong. Nữ diễn viên chia sẻ rằng mình vô cùng hối hận vì mang điện thoại riêng đi quay và "bắt đền" đoàn làm phim gấp đôi.</li>
+
+                <li>Cứ tưởng phải chịu nhiều khó khăn như thế nhưng Nhã Phương vẫn là cô gái đáng ghen tỵ vì có nhiều cảnh quay tình tứ với anh chàng đẹp trai Kang Tae Oh, không ngờ ngay cả cảnh lãng mạn cũng không hề dễ dàng. Để có được nụ hôn cực ngọt ngào bên bờ sông Hàn trên phim, cả hai đã quay liên tục từ lúc chập tối đến tận đêm. Mỗi khi kết thúc cảnh quay, cả hai người nhanh chóng nhìn sang hướng khác nhau, khuôn mặt lộ rõ vẻ mệt mỏi phờ phạc. Khác với "phản ứng hóa học" tình cảm trên phim, Nhã Phương và Kang Tae Oh ngoài đời có vẻ mệt đến nỗi không thể tình tứ nổi.</li>
+            </ul>
         </div>
-    </section>
-    <section class="artist">
-        <div class="container">
-            <h3 class="title">Tóm tắt quá trình hoạt động nghệ thuật</h3>
-            <div class="content">
-                <p class="text-title">Ban đầu</p>
-                <p class="text">Các phim Nhã Phương tham gia có thể kể đến như Những Thiên Thần Áo Trắng, Hoàng Tử Xấu Trai, Hoa Nắng, Trường Nội Trú…</p>
-                <p class="text">Góp mặt trong những bộ phim truyền hình này, Nhã Phương đóng vai đúng với lứa tuổi cô lúc bấy giờ - một học sinh. Tuy chỉ là những vai nhỏ, nhưng cô cũng đã thể hiện được tiềm năng diễn xuất của mình. Thời điểm đó, Nhã Phương diễn cảnh khóc đã rất có hồn.</p>
-                <p class="text">Sau đó, cô tham gia hai bộ phim với tuýp nhân vật khác hẳn với những vai trước đó. Một là quận chúa trong Anh Chàng Vượt Thời Gian và một là cô gái miền biển ngây thơ, trong sáng trong Cát Nóng. Hai phim này đều xếp vào hàng “thảm họa” nhưng diễn xuất của Nhã Phương vẫn được công nhận.</p>
-                <p class="text-title">Vụt sáng sau "Xin lỗi, anh chỉ là thằng bán bánh giò"</p>
-                <p class="text">Dù tham gia nhiều phim như vậy nhưng phải mãi đến khi tham gia phim ngắn Xin Lỗi, Anh Chỉ Là Thằng Bán Bánh Giò, Nhã Phương mới thực sự trở nên nổi tiếng. Cô vào vai cô gái bán bánh tráng, có một tình yêu đẹp và buồn với chàng trai bán bánh giò.</p>
-                <p class="text">Ngay sau khi bộ phim được tung lên mạng Youtube, sức hút và sự lan truyền của bộ phim có lẽ cũng khiến chính Nhã Phương kinh ngạc. Cô được người xem ưu ái gọi với cái tên “hot girl bánh tráng” và từ một diễn viên không mấy tiếng tăm, Nhã Phương nổi tiếng và có thêm nhiều người hâm mộ. Tuy nhiên, thành công này cũng bắt nguồn từ diễn xuất chân thực, cảm động của Nhã Phương trong phim.</p>
-
-                <p class="text-title">Thành công với "Vừa đi vừa khóc", "Quả tim máu" và các dự án phim khác</p>
-                <p class="text">Sau Xin Lỗi, Anh Chỉ Là Thằng Bán Bánh Giò, Nhã Phương cứ thế thẳng tiến trong sự nghiệp diễn xuất của mình. Cô liên tiếp gặt hái thành công khi tham gia Vừa Đi Vừa Khóc và Quả Tim Máu.</p>
-
-                <p class="text">Ở phim truyền hình Vừa Đi Vừa Khóc, Nhã Phương vào vai Thêu - cô gái đanh đá, mê trai điên cuồng, luôn bám theo trai (Minh Hằng) để chăm sóc. Nhã Phương đã thể hiện một Thêu lém lỉnh, hài hước, đôi lúc lại rất vô duyên khiến khán giả vô cùng thích thú. Có những giai đoạn, vai Thêu của Nhã Phương còn nổi bật hơn cả cặp nhân vật chính.</p>
-
-                <p class="text">Nhã Phương nhận lời tham gia phim kinh dị Quả Tim Máu, Nhã Phương chứng tỏ cô đã trưởng thành trong diễn xuất. Có thể nói, đây là vai diễn nặng ký nhất của Nhã Phương từ trước tới giờ. Bởi vai diễn này không nhí nhảnh và tươi vui như dạng vai quen thuộc của cô, Quả Tim Máu đòi hỏi Nhã Phương phải diễn có chiều sâu hơn. Và một lần nữa, Nhã Phương lại thành công với khả năng diễn xuất của mình.</p>
-
-                <p class="text-title">Nỗ lực không ngừng nghỉ để mang đến thành công</p>
-                <p class="text">Cô và bạn diễn trẻ hơn bốn tuổi Kang Tae Oh đã trở thành cặp đôi làm mưa làm gió trong phim Tuổi thanh xuân. Cả cô và Kang Tae Oh đều nhận được giải nam, nữ diễn viên ấn tượng. Dù hơn tuổi bạn diễn nhưng rất khó để nhận ra điều đó vì sự tươi trẻ của cô. Ngoài ra, cô còn hi sinh rất nhiều:</p>
-
-                <ul>
-                    <li>Cái tát của mẹ Phong (NSND Minh Châu) trong phim. Thực chất ở ngoài cũng chẳng nhẹ hơn là bao do cô chấp nhận để mang lại hiệu quả tốt nhất cho bộ phim.</li>
-
-                    <li>Ai cũng nghĩ rằng được đi nước ngoài rất thích nhưng chẳng mấy ai biết được khi quay ở Hàn Quốc và Nhật Bản cô phải làm việc tới 20 tiếng và chịu đựng cái rét dưới 0 độ.</li>
-
-                    <li>Trong cảnh quay Cynthia lái xe đâm Linh (Nhã Phương), diễn biến phim là khi xe của Cynthia chưa đi tới thì Junsu đã kịp thời xuất hiện đẩy Linh ra. Tuy nhiên trong một lần quay hỏng, bạn diễn nhấn ga quá đà khiến xe không kịp dừng và đâm vào người Nhã Phương. Nữ diễn viên bất ngờ và ngã bật ra sau. </li>
-
-                    <li>Để có những cảnh quay chân thực nhất, các diễn viên gần như diễn thật ở những cảnh xung đột, xô đẩy. Trong phim Linh bị "hành" như thế nào thì ngoài đời Nhã Phương cũng chịu khổ y như vậy. Để có được cảnh quay "anh hùng cứu mỹ nhân" này, Nhã Phương đã chịu nhiều cú xô khá mạnh của Kang Tae Oh. </li>
-
-                    <li>Khi quay cảnh Linh bị người đi đường va vào làm rơi điện thoại, Nhã Phương đã cho đoàn làm phim mượn chính chiếc điện thoại của mình. Vì quay đi quay lại nhiều lần cảnh rơi nên chiếc điện thoại của cô nàng đã bị hỏng khi quay xong. Nữ diễn viên chia sẻ rằng mình vô cùng hối hận vì mang điện thoại riêng đi quay và "bắt đền" đoàn làm phim gấp đôi.</li>
-
-                    <li>Cứ tưởng phải chịu nhiều khó khăn như thế nhưng Nhã Phương vẫn là cô gái đáng ghen tỵ vì có nhiều cảnh quay tình tứ với anh chàng đẹp trai Kang Tae Oh, không ngờ ngay cả cảnh lãng mạn cũng không hề dễ dàng. Để có được nụ hôn cực ngọt ngào bên bờ sông Hàn trên phim, cả hai đã quay liên tục từ lúc chập tối đến tận đêm. Mỗi khi kết thúc cảnh quay, cả hai người nhanh chóng nhìn sang hướng khác nhau, khuôn mặt lộ rõ vẻ mệt mỏi phờ phạc. Khác với "phản ứng hóa học" tình cảm trên phim, Nhã Phương và Kang Tae Oh ngoài đời có vẻ mệt đến nỗi không thể tình tứ nổi.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-    <section id="award-achieved">
-        <div class="container">
-            <h3 class="title">Các giải thưởng đã đạt được</h3>
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="award">
-                            <div class="award-img">
-                                <img src="./img/actor/nha-phuong-canh-dieu-vang-2017.jpg">
-                            </div>
-                            <div class="award-content">
-                                <div class="name">Cánh Diều Vàng - 2017</div>
-                                <div class="text">Giải nữ diễn viên chính xuất sắc nhất</div>
-                            </div>
+    </div>
+</section>
+<section id="award-achieved">
+    <div class="container">
+        <h3 class="title">Các giải thưởng đã đạt được</h3>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="award">
+                        <div class="award-img">
+                            <img src="./~/Images/actor/nha-phuong-canh-dieu-vang-2017.jpg">
+                        </div>
+                        <div class="award-content">
+                            <div class="name">Cánh Diều Vàng - 2017</div>
+                            <div class="text">Giải nữ diễn viên chính xuất sắc nhất</div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="award">
-                            <div class="award-img">
-                                <img src="./img/actor/nha-phuong-canh-dieu-vang-2016.jpg">
-                            </div>
-                            <div class="award-content">
-                                <div class="name">Cánh Diều Vàng - 2016</div>
-                                <div class="text">Giải nữ diễn viên chính xuất sắc nhất</div>
-                            </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="award">
+                        <div class="award-img">
+                            <img src="./~/Images/actor/nha-phuong-canh-dieu-vang-2016.jpg">
+                        </div>
+                        <div class="award-content">
+                            <div class="name">Cánh Diều Vàng - 2016</div>
+                            <div class="text">Giải nữ diễn viên chính xuất sắc nhất</div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="award">
-                            <div class="award-img">
-                                <img src="./img/actor/nha-phuong-mai-vang-2016.jpg">
-                            </div>
-                            <div class="award-content">
-                                <div class="name">Giải Mai Vàng - 2016</div>
-                                <div class="text">Giải nghệ sĩ của năm</div>
-                            </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="award">
+                        <div class="award-img">
+                            <img src="./~/Images/actor/nha-phuong-mai-vang-2016.jpg">
+                        </div>
+                        <div class="award-content">
+                            <div class="name">Giải Mai Vàng - 2016</div>
+                            <div class="text">Giải nghệ sĩ của năm</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="comments">
-        <div class="container">
-            <div class="comments-content">
-                <h3 class="title">Bình luận về tác phẩm</h3>
-                <div class="comment-container">
-                    <i class="fa fa-close"></i>
-                    <div class="comment">
-                        <div class="col-md-1 col-xs-4 block">
-                            <div class="comment-vote">
-                                <i class="like-btn fa fa-caret-up"></i>
-                                <p class="number-like">5</p>
-                                <i class="dislike-btn fa fa-caret-down"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-xs-8 block">
-                            <div class="user">
-                                <div class="avatar">
-                                    <img src="./img/nene.jpg">
-                                </div>
-                                <div class="user-info">
-                                    <p class="name">Trần Văn A</p>
-                                    <p class="type-user">Khán giả</p>
-                                    <p class="score">1.2</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9 col-xs-12 block">
-                            <div class="comment-content">
-                                <div class="top-block row">
-                                    <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                                </div>
-                                <div class="mid-block">
-                                    <div class="comment-text">
-                                        <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                    </div>
-                                </div>
-                                <div class="bottom-block row">
-                                    <div class="block col-md-6 col-xs-6">
-                                        <p class="amount-of-response">5 phản hồi</p>
-                                    </div>
-                                    <div class="block col-md-6 col-xs-6">
-                                        <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                    </div>
-                                </div>
-                            </div>
+    </div>
+</section>
+<section class="comments">
+    <div class="container">
+        <div class="comments-content">
+            <h3 class="title">Bình luận về tác phẩm</h3>
+            <div class="comment-container">
+                <i class="fa fa-close"></i>
+                <div class="comment">
+                    <div class="col-md-1 col-xs-4 block">
+                        <div class="comment-vote">
+                            <i class="like-btn fa fa-caret-up"></i>
+                            <p class="number-like">5</p>
+                            <i class="dislike-btn fa fa-caret-down"></i>
                         </div>
                     </div>
-                </div>
-                <div class="comment-container">
-                    <i class="fa fa-close"></i>
-                    <div class="comment">
-                        <div class="col-md-1 col-xs-4 block">
-                            <div class="comment-vote">
-                                <i class="like-btn fa fa-caret-up"></i>
-                                <p class="number-like">5</p>
-                                <i class="dislike-btn fa fa-caret-down"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-xs-8 block">
-                            <div class="user">
-                                <div class="avatar">
-                                    <img src="./img/nene.jpg">
-                                </div>
-                                <div class="user-info">
-                                    <p class="name">Trần Văn A</p>
-                                    <p class="type-user">Khán giả</p>
-                                    <p class="score">1.2</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9 col-xs-12 block">
-                            <div class="comment-content">
-                                <div class="top-block row">
-                                    <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                                </div>
-                                <div class="mid-block">
-                                    <div class="comment-text">
-                                        <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                    </div>
-                                </div>
-                                <div class="bottom-block row">
-                                    <div class="block col-md-6 col-xs-6">
-                                        <p class="amount-of-response">5 phản hồi</p>
-                                    </div>
-                                    <div class="block col-md-6 col-xs-6">
-                                        <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment-container">
-                    <i class="fa fa-close"></i>
-                    <div class="comment">
-                        <div class="col-md-1 col-xs-4 block">
-                            <div class="comment-vote">
-                                <i class="like-btn fa fa-caret-up"></i>
-                                <p class="number-like">5</p>
-                                <i class="dislike-btn fa fa-caret-down"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-xs-8 block">
-                            <div class="user">
-                                <div class="avatar">
-                                    <img src="./img/nene.jpg">
-                                </div>
-                                <div class="user-info">
-                                    <p class="name">Trần Văn A</p>
-                                    <p class="type-user">Khán giả</p>
-                                    <p class="score">1.2</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9 col-xs-12 block">
-                            <div class="comment-content">
-                                <div class="top-block row">
-                                    <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                                </div>
-                                <div class="mid-block">
-                                    <div class="comment-text">
-                                        <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                    </div>
-                                </div>
-                                <div class="bottom-block row">
-                                    <div class="block col-md-6 col-xs-6">
-                                        <p class="amount-of-response">5 phản hồi</p>
-                                    </div>
-                                    <div class="block col-md-6 col-xs-6">
-                                        <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment-maker">
-                    <div class="col-md-2 col-xs-12 block">
+                    <div class="col-md-2 col-xs-8 block">
                         <div class="user">
                             <div class="avatar">
-                                <img src="./img/nene.jpg">
+                                <img src="./~/Images/nene.jpg">
                             </div>
                             <div class="user-info">
                                 <p class="name">Trần Văn A</p>
@@ -281,129 +134,202 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-10 col-xs-12 block">
-                        <textarea class="comment-area"></textarea>
-                        <a><div class="btn comment-btn">BÌNH LUẬN</div></a>
+                    <div class="col-md-9 col-xs-12 block">
+                        <div class="comment-content">
+                            <div class="top-block row">
+                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
+                            </div>
+                            <div class="mid-block">
+                                <div class="comment-text">
+                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
+                                </div>
+                            </div>
+                            <div class="bottom-block row">
+                                <div class="block col-md-6 col-xs-6">
+                                    <p class="amount-of-response">5 phản hồi</p>
+                                </div>
+                                <div class="block col-md-6 col-xs-6">
+                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section id="other-actors">
-        <h3 class="title">Một số diễn viên khác</h3>
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <a>
-                        <div class="info-content swiper-lazy">
-                            <div class="avatar">
-                                <img data-src="img/kmt.jpg" class="swiper-lazy">
-                            </div>
-                            <p class="name">KIỀU MINH TUẤN</p>
+            <div class="comment-container">
+                <i class="fa fa-close"></i>
+                <div class="comment">
+                    <div class="col-md-1 col-xs-4 block">
+                        <div class="comment-vote">
+                            <i class="like-btn fa fa-caret-up"></i>
+                            <p class="number-like">5</p>
+                            <i class="dislike-btn fa fa-caret-down"></i>
                         </div>
-                        <div class="swiper-lazy-preloader"></div>
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a>
-                        <div class="info-content swiper-lazy">
+                    </div>
+                    <div class="col-md-2 col-xs-8 block">
+                        <div class="user">
                             <div class="avatar">
-                                <img data-src="img/actor/truong-giang.jpg" class="swiper-lazy">
+                                <img src="./~/Images/nene.jpg">
                             </div>
-                            <p class="name">TRƯỜNG GIANG</p>
-                        </div>
-                        <div class="swiper-lazy-preloader"></div>
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a>
-                        <div class="info-content swiper-lazy">
-                            <div class="avatar">
-                                <img data-src="img/actor/sam.jpg" class="swiper-lazy">
+                            <div class="user-info">
+                                <p class="name">Trần Văn A</p>
+                                <p class="type-user">Khán giả</p>
+                                <p class="score">1.2</p>
                             </div>
-                            <p class="name">SAM</p>
                         </div>
-                        <div class="swiper-lazy-preloader"></div>
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a>
-                        <div class="info-content swiper-lazy">
-                            <div class="avatar">
-                                <img data-src="img/actor/ngo-thanh-van.jpg" class="swiper-lazy">
+                    </div>
+                    <div class="col-md-9 col-xs-12 block">
+                        <div class="comment-content">
+                            <div class="top-block row">
+                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
                             </div>
-                            <p class="name">NGÔ THANH VÂN</p>
-                        </div>
-                        <div class="swiper-lazy-preloader"></div>
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a>
-                        <div class="info-content swiper-lazy">
-                            <div class="avatar">
-                                <img data-src="img/actor/ly-hai.jpg" class="swiper-lazy">
+                            <div class="mid-block">
+                                <div class="comment-text">
+                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
+                                </div>
                             </div>
-                            <p class="name">LÝ HẢI</p>
+                            <div class="bottom-block row">
+                                <div class="block col-md-6 col-xs-6">
+                                    <p class="amount-of-response">5 phản hồi</p>
+                                </div>
+                                <div class="block col-md-6 col-xs-6">
+                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="swiper-lazy-preloader"></div>
-                    </a>
+                    </div>
                 </div>
             </div>
+            <div class="comment-container">
+                <i class="fa fa-close"></i>
+                <div class="comment">
+                    <div class="col-md-1 col-xs-4 block">
+                        <div class="comment-vote">
+                            <i class="like-btn fa fa-caret-up"></i>
+                            <p class="number-like">5</p>
+                            <i class="dislike-btn fa fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-8 block">
+                        <div class="user">
+                            <div class="avatar">
+                                <img src="./~/Images/nene.jpg">
+                            </div>
+                            <div class="user-info">
+                                <p class="name">Trần Văn A</p>
+                                <p class="type-user">Khán giả</p>
+                                <p class="score">1.2</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-xs-12 block">
+                        <div class="comment-content">
+                            <div class="top-block row">
+                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
+                            </div>
+                            <div class="mid-block">
+                                <div class="comment-text">
+                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
+                                </div>
+                            </div>
+                            <div class="bottom-block row">
+                                <div class="block col-md-6 col-xs-6">
+                                    <p class="amount-of-response">5 phản hồi</p>
+                                </div>
+                                <div class="block col-md-6 col-xs-6">
+                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="comment-maker">
+                <div class="col-md-2 col-xs-12 block">
+                    <div class="user">
+                        <div class="avatar">
+                            <img src="./~/Images/nene.jpg">
+                        </div>
+                        <div class="user-info">
+                            <p class="name">Trần Văn A</p>
+                            <p class="type-user">Khán giả</p>
+                            <p class="score">1.2</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 col-xs-12 block">
+                    <textarea class="comment-area"></textarea>
+                    <a><div class="btn comment-btn">BÌNH LUẬN</div></a>
+                </div>
+            </div>
         </div>
-    </section>
-    <!-- footer -->
-    <footer class="footer-distributed">
-        <div class="footer-left">
-            <div class="footer-logo">
-                <img src="img/footer-logo.png" alt="">
+    </div>
+</section>
+<section id="other-actors">
+    <h3 class="title">Một số diễn viên khác</h3>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <a>
+                    <div class="info-content swiper-lazy">
+                        <div class="avatar">
+                            <img data-src="~/Images/kmt.jpg" class="swiper-lazy">
+                        </div>
+                        <p class="name">KIỀU MINH TUẤN</p>
+                    </div>
+                    <div class="swiper-lazy-preloader"></div>
+                </a>
             </div>
-            <p class="footer-links">
-                <a>Trang Chủ</a>
-                ·
-                <a>Lịch sử</a>
-                ·
-                <a>Bảng xếp hạng</a>
-                ·
-                <a>Liên hệ</a>
-            </p>
-            <p class="footer-company-name">Nhóm con chim non &copy; 2018</p>
+            <div class="swiper-slide">
+                <a>
+                    <div class="info-content swiper-lazy">
+                        <div class="avatar">
+                            <img data-src="~/Images/actor/truong-giang.jpg" class="swiper-lazy">
+                        </div>
+                        <p class="name">TRƯỜNG GIANG</p>
+                    </div>
+                    <div class="swiper-lazy-preloader"></div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a>
+                    <div class="info-content swiper-lazy">
+                        <div class="avatar">
+                            <img data-src="~/Images/actor/sam.jpg" class="swiper-lazy">
+                        </div>
+                        <p class="name">SAM</p>
+                    </div>
+                    <div class="swiper-lazy-preloader"></div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a>
+                    <div class="info-content swiper-lazy">
+                        <div class="avatar">
+                            <img data-src="~/Images/actor/ngo-thanh-van.jpg" class="swiper-lazy">
+                        </div>
+                        <p class="name">NGÔ THANH VÂN</p>
+                    </div>
+                    <div class="swiper-lazy-preloader"></div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a>
+                    <div class="info-content swiper-lazy">
+                        <div class="avatar">
+                            <img data-src="~/Images/actor/ly-hai.jpg" class="swiper-lazy">
+                        </div>
+                        <p class="name">LÝ HẢI</p>
+                    </div>
+                    <div class="swiper-lazy-preloader"></div>
+                </a>
+            </div>
         </div>
-        <div class="footer-center">
-            <h4>Các thông tin liên quan:</h4>
-            <div>
-                <i class="fa fa-map-marker"></i>
-                <p><span>Khu phố 6, phường Linh Trung</span>Quận Thủ Đức, Tp.Hồ Chí Minh</p>
-            </div>
-            <div>
-                <i class="fa fa-phone"></i>
-                <p>(08) 37251993</p>
-            </div>
-            <div>
-                <i class="fa fa-envelope"></i>
-                <p><a href="mailto:DHCNTT_TPHCM@gm.uit.com.vn">DHCNTT_TPHCM@gm.uit.com.vn</a></p>
-            </div>
-        </div>
-        <div class="footer-right">
-            <p class="footer-company-about">
-                <h4>Thông tin về nhóm:</h4>
-            <p class="group-member">Nhóm bao gồm 4 thành viên:</p>
-            <p class="group-member">15520801: Dương Văn Thanh</p>
-            <p class="group-member">15520680: Phạm Ngọc Quân</p>
-            <p class="group-member">15520693: Trần Hưng Quang</p>
-            <p class="group-member">15520679: Nguyễn Trung Quân</p>
-            </p>
-            <div class="footer-icons">
-                <a><i class="fa fa-facebook"></i></a>
-                <a><i class="fa fa-twitter"></i></a>
-                <a><i class="fa fa-linkedin"></i></a>
-                <a><i class="fa fa-github"></i></a>
-            </div>
-        </div>
-    </footer>
-</body>
-<script type="text/javascript" src="lib/jquery.min.js"></script>
-<script type="text/javascript" src="lib/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="lib/swiper-4.4.2/dist/js/swiper.min.js"></script>
-<script type="text/javascript" src="lib/jquery.bpopup.min.js"></script>
-<script type="text/javascript" src="js/actor.js"></script>
-</html>
+    </div>
+</section>
+<!--End page content-->
+
+<!--Script js for page-->
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/js/actor.js"></script>
+}

@@ -1,0 +1,25 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/Shared/lib/swiper-4.4.2/dist/css/swiper.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/Shared/lib/bootstrap-3.1.1-dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="~/Shared/lib/footer.css" />
+    <link rel="stylesheet" href="~/Content/css/main.css" />
+    @RenderSection("styles", required: false)
+    @RenderPage("_header.cshtml")
+    <title>@Page.Title</title>
+</head>
+<body>
+    @RenderPage("_navigator.cshtml")
+    @RenderBody()
+    @RenderPage("_footer.cshtml")
+</body>
+<script type="text/javascript" src="~/Shared/lib/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="~/Shared/lib/swiper-4.4.2/dist/js/swiper.min.js"></script>
+<script type="text/javascript" src="~/Shared/lib/jquery.bpopup.min.js"></script>
+@RenderSection("scripts", required:false)
+</html>

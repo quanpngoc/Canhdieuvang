@@ -77,14 +77,15 @@ $(document).ready(function () {
         }
     });
 
+    $checkNavPos();
     function checkNavPos(){
         if($(this).scrollTop()>=60){
             $('.navbar').addClass('fixNav');
-            $('.user-avatar img').attr('src','img/user-black.png');
+            $('.user-avatar img').attr('src','Images/user-black.png');
         }
         else{
             $('.navbar').removeClass('fixNav');
-            $('.user-avatar img').attr('src','img/user-white.png');
+            $('.user-avatar img').attr('src','Images/user-white.png');
         }
 
         // if($(this).scrollTop()>=500){

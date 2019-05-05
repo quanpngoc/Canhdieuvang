@@ -8,6 +8,21 @@
 <link rel="stylesheet" href="css/main.css" />
 <title>Home Page</title>
 <body>
+    @{
+        var db = Database.Open("DefaultConnection");
+        var selectQueryString = "SELECT * FROM Users";
+    }
+    <table>
+        @foreach (var row in db.Query(selectQueryString))
+        {
+            <tr>
+                <td>@row.MaNguoiDung</td>
+                <td>@row.TenNguoiDung</td>
+                <td>@row.TenDangNhap</td>
+            </tr>
+        }
+    </table>
+    
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">

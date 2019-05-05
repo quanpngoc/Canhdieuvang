@@ -5,127 +5,54 @@
 
 @{
     var db = Database.Open("DefaultConnection");
-    var selectQueryString = "SELECT * FROM Phim Where GiaiThuong='Canh dieu vang'";
 
+    //Lấy data banner tin tức giải
+    var newsList = db.Query("SELECT TOP 4 TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc order by NgayDang desc");
+
+    //Lấy data các phim đạt giải theo từng thể loại giải (cánh diều vàng, cánh diều bạc)
+    var goldFilmAwardList = db.Query("SELECT * FROM Phim, GiaiThuongPhim WHERE Phim.MaPhim = GiaiThuongPhim.MaPhim AND Nam='2018' AND TenGiaiThuongPhim=N'Cánh diều vàng'");
+    var silverFilmAwardList = db.Query("SELECT * FROM Phim, GiaiThuongPhim WHERE Phim.MaPhim = GiaiThuongPhim.MaPhim AND Nam='2018' AND TenGiaiThuongPhim=N'Cánh diều bạc'");
+
+    //Lấy data các diễn viên đạt giải trong năm
+    var actorList = db.Query("SELECT TOP 4 * FROM DienVien, GiaiThuongDienVien WHERE DienVien.MaDV = GiaiThuongDienVien.MaDV AND Nam = '2018' order by DienVien.MaDV asc");
 }
 
 <!--Begin page content-->
 <section id="kv">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <div id="banner1" class="banner">
-                    <div class="banner-img">
-                        <img src="~/Images/banner1.jpg" />
-                    </div>
-                    <div class="info-content animation">
-                        <div class="black-background"></div>
-                        <div class="top-block">
-                            <h3 class="title">Nhìn lại Cánh diều vàng 2017</h3>
-                            <p class="text">Theo nhận xét của giới chuyên môn, điện ảnh Việt Nam như đang được trẻ hóa. Nhiều bộ phim mang tính giải trí cao nhưng không còn là hài nhảm, 1/3 trong số các phim tham dự đều có chất lượng tốt và khá đồng đều. Những cái tên như Em chưa 18, Cô Ba Sài Gòn, Cô gái đến từ hôm qua… đều đạt kỷ lục doanh thu phòng vé trong thời gian vừa qua...</p>
+            @for (int c1 = 0; c1 < newsList.Count(); c1++) {
+                <div class="swiper-slide">
+                    <div id="banner@(c1 + 1) " class="banner">
+                        <div class="banner-img">
+                            <img src="@newsList.ElementAt(c1).LinkAnhBia" />
                         </div>
-                        <div class="bottom-block">
-                            <a href="./newspage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div id="banner2" class="banner">
-                    <div class="banner-img">
-                        <img src="~/Images/banner2.jpg" />
-                    </div>
-                    <div class="info-content">
-                        <div class="black-background"></div>
-                        <div class="top-block">
-                            <h3 class="title">Cánh diều vàng 2017 đã có chủ</h3>
-                            <p class="text">
-                                Phim truyện xuất sắc:
-                                <br>
-                                Cánh diều vàng: Sài Gòn anh yêu em
-                                <br>
-                                Cánh diều bạc: 12 chòm sao: Vẽ đường cho yêu chạy và Tấm Cám: Chuyện chưa kể
-                                <br>
-                                Bằng khen: Cha cõng con, Sút và Bao giờ có yêu nhau
-                                <br>
-                                Bằng khen của BGK: Tik Tak anh yêu em
-                                <br>...
-                            </p>
-                        </div>
-                        <div class="bottom-block">
-                            <a href="./newspage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
+                        <div class="info-content animation">
+                            <div class="black-background"></div>
+                            <div class="top-block">
+                                <h3 class="title">@newsList.ElementAt(c1).TieuDe</h3>
+                                <p class="text">
+                                    @{string[] content = @newsList.ElementAt(c1).GioiThieuTT.Split(';');}
+                                    @foreach (var str in content)
+                                    {
+                                        @str
+                                        <br>
+                                        @*if (Array.IndexOf(content,str) < content.Count() - 1)
+                                        {
+                                            <br>
+                                        }*@
+                                    }
+                                </p>
+                            </div>
+                            <div class="bottom-block">
+                                <a href="./newspage.cshtml">
+                                    <div class="btn-view-more btn">XEM THÊM</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="swiper-slide">
-                <div id="banner3" class="banner">
-                    <div class="banner-img">
-                        <img src="~/Images/banner3.jpg" />
-                    </div>
-                    <div class="info-content">
-                        <div class="black-background"></div>
-                        <div class="top-block">
-                            <h3 class="title">Cánh diều vàng 2017: Điện ảnh Việt Nam như đang trẻ lại</h3>
-                            <p class="text">
-                                NSND Đặng Nhật Minh, đạo diễn của những bộ phim nổi tiếng như "Bao giờ cho đến Tháng Mười", "Đừng đốt" cho rằng, điện ảnh Việt Nam như đang trẻ lại.
-                                <br>
-                                Theo ông, các phim giải trí năm nay tốt hơn những năm trước, không có phim hài nhảm. Tuy nhiên, tính giải trí chỉ dành cho khán giả trẻ chứ không phải dành cho khán giả phổ thông.
-                            </p>
-                        </div>
-                        <div class="bottom-block">
-                            <a href="./newspage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div id="banner4" class="banner">
-                    <div class="banner-img">
-                        <img src="~/Images/banner4.jpg" />
-                    </div>
-                    <div class="info-content">
-                        <div class="black-background"></div>
-                        <div class="top-block">
-                            <h3 class="title">Trương Ngọc Ánh được sắp xếp trao giải cho Trần Bảo Sơn</h3>
-                            <p class="text">Đêm 8/1, tại Nhà hát TP. HCM, giải thưởng “Ngôi sao xanh” đã vinh danh Trần Bảo Sơn cùng nhiều nghệ sỹ khác trong ngành công nghiệp điện ảnh và truyền hình tại Việt Nam. Trương Ngọc Ánh đã xướng tên chồng cũ trong hạng mục danh giá: Nam diễn viên điện ảnh xuất sắc nhất.</p>
-                        </div>
-                        <div class="bottom-block">
-                            <a href="./newspage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div id="banner5" class="banner">
-                    <div class="banner-img">
-                        <img src="~/Images/banner5.jpg" />
-                    </div>
-                    <div class="info-content">
-                        <div class="black-background"></div>
-                        <div class="top-block">
-                            <h3 class="title">Kim Tuyến bất ngờ nhận giải Cánh diều vàng</h3>
-                            <p class="text">
-                                Tại Lễ trao giải Cánh diểu vàng 2015 diễn ra tại Hà Nội đêm 20/4,DVDA Kim Tuyến đã bất ngờ nhận được giải thưởng Nữ diễn viên phụ xuất sắc nhật với bộ phim Tuổi Thanh Xuân.
-                                <br>Tham gian trong Lễ trao giải,Kim Tuyến đã chọn chiếc đầm mằ trắng nhẹ nhàng và tinh khiết với kiểu dáng trẻ trung,sang trọng của NTK Chung Thanh Phong.
-                            </p>
-                        </div>
-                        <div class="bottom-block">
-                            <a href="./newspage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+             }
         </div>
         <div class="swiper-pagination"></div>
         <div class="swiper-button-next"></div>
@@ -236,129 +163,93 @@
         </div>
     </div>
     <div class="panel-content">
-        @foreach (var row in db.Query(selectQueryString))
-        {
-            foreach (var row1 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu bac'"))
+        @{
+            var i = 1;
+            foreach (var award in goldFilmAwardList)
             {
+                <div id="film-@i" class="film hidden">
+                    <div class="content">
 
-                foreach (var row2 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu vang truyen hinh'"))
-                {
-                    foreach (var row3 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu bac truyen hinh'"))
-                    {
-                        <div id="film-1" class="film hidden">
-                            <div class="content">
+                        <h3 class="title">@award.TenPhim</h3>
+                        <p class="award">*---@award.TenGiaiThuongPhim - @award.TheLoai---*</p>
+                        @{string[] intro = award.GioiThieuPhim.Split(';');}
+                        @foreach (var str in intro)
+                        {<p class="text">@str</p>}
 
-                                <h3 class="title">
-                                    @row.TenPhim>
-                                    <p class="award">*---Cánh diều vàng - Phim chiếu rạp---*</p>
-                                    <p class="text">@row.GioiThieuPhim</p>
-
-                                    <p class="text">Nội dung:</p>
-                                    <p class="text">@row.NoiDungPhim</p>
-                            </div>
-                            <div class="trailer col-md-8">
-                                <iframe width="560" height="315" src="@row.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="more-info col-md-4">
-                                <div class="top">
-                                    <p class="text">Đạo diễn: @row.DaoDien</p>
-                                    <p class="text">Nhà sản xuất: @row.Nhasanxuat</p>
-                                    <p class="text">Diễn viên: @row.DienVien</p>
-                                    <p class="text">Doanh thu: @row.DoanhThu</p>
-                                </div>
-                                <div class="bottom">
-                                    <a href="./filmpage.cshtml">
-                                        <div class="btn-view-more btn">XEM THÊM</div>
-                                    </a>
-                                </div>
-                            </div>
+                        <p class="text">Nội dung:</p>
+                        @{string[] content = award.NoiDungPhim.Split(';');}
+                        @foreach (var str in content)
+                        {<p class="text">@str</p>}
+                    </div>
+                    <div class="trailer col-md-8">
+                        <iframe width="560" height="315" src="@award.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="more-info col-md-4">
+                        <div class="top">
+                            <p class="text">Đạo diễn: @award.DaoDien</p>
+                            <p class="text">Nhà sản xuất: @award.Nhasanxuat</p>
+                            <p class="text">Diễn viên: @award.DienVien</p>
+                            @if (@award.TheLoai == "Phim chiếu rạp")
+                            {
+                                <p class="text">Doanh thu: @award.GhiChu</p>
+                            }
+                            else
+                            {
+                                <p class="text">Phát sóng tại: @award.GhiChu</p>
+                            }
                         </div>
-
-                        <div id="film-2" class="film hidden">
-                            <div class="content">
-                                <h3 class="title">
-                                    @row1.TenPhim>
-                                    <p class="award">*---Cánh diều bạc - Phim chiếu rạp---*</p>
-                                    <p class="text">@row1.GioiThieuPhim</p>
-
-                                    <p class="text">Nội dung:</p>
-                                    <p class="text">@row1.NoiDungPhim</p>
-                            </div>
-                            <div class="trailer col-md-8">
-                                <iframe width="560" height="315" src="@row1.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="more-info col-md-4">
-                                <div class="top">
-                                    <p class="text">Đạo diễn: @row1.DaoDien</p>
-                                    <p class="text">Nhà sản xuất: @row1.Nhasanxuat</p>
-                                    <p class="text">Diễn viên: @row1.DienVien</p>
-                                    <p class="text">Doanh thu: @row1.DoanhThu</p>
-                                </div>
-                                <div class="bottom">
-                                    <a href="./filmpage.cshtml">
-                                        <div class="btn-view-more btn">XEM THÊM</div>
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="bottom">
+                            <a href="./filmpage.cshtml">
+                                <div class="btn-view-more btn">XEM THÊM</div>
+                            </a>
                         </div>
-                        <div id="film-3" class="film hidden">
-                            <div class="content">
+                    </div>
+                </div>
+                i = i + 2;
+            }
 
-                                <h3 class="title">
-                                    @row2.TenPhim>
-                                    <p class="award">*---Cánh diều vàng - Phim chiếu rạp---*</p>
-                                    <p class="text">@row2.GioiThieuPhim</p>
+            i=2;
+            foreach (var award in silverFilmAwardList)
+            {
+                <div id="film-@i" class="film hidden">
+                    <div class="content">
 
-                                    <p class="text">Nội dung:</p>
-                                    <p class="text">@row2.NoiDungPhim</p>
-                            </div>
-                            <div class="trailer col-md-8">
-                                <iframe width="560" height="315" src="@row2.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="more-info col-md-4">
-                                <div class="top">
-                                    <p class="text">Đạo diễn: @row2.DaoDien</p>
-                                    <p class="text">Nhà sản xuất: @row2.Nhasanxuat</p>
-                                    <p class="text">Diễn viên: @row2.DienVien</p>
-                                    <p class="text">Doanh thu: @row2.DoanhThu</p>
-                                </div>
-                                <div class="bottom">
-                                    <a href="./filmpage.cshtml">
-                                        <div class="btn-view-more btn">XEM THÊM</div>
-                                    </a>
-                                </div>
-                            </div>
+                        <h3 class="title">@award.TenPhim</h3>
+                        <p class="award">*---@award.TenGiaiThuongPhim - @award.TheLoai---*</p>
+                        @{string[] intro = award.GioiThieuPhim.Split(';');}
+                        @foreach (var str in intro)
+                        {<p class="text">@str</p>}
+
+                        <p class="text">Nội dung:</p>
+                        @{string[] content = award.NoiDungPhim.Split(';');}
+                        @foreach (var str in content)
+                        {<p class="text">@str</p>}
+                    </div>
+                    <div class="trailer col-md-8">
+                        <iframe width="560" height="315" src="@award.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="more-info col-md-4">
+                        <div class="top">
+                            <p class="text">Đạo diễn: @award.DaoDien</p>
+                            <p class="text">Nhà sản xuất: @award.Nhasanxuat</p>
+                            <p class="text">Diễn viên: @award.DienVien</p>
+                            @if (@award.TheLoai == "Phim chiếu rạp")
+                            {
+                                <p class="text">Doanh thu: @award.GhiChu</p>
+                            }
+                            else
+                            {
+                                <p class="text">Phát sóng tại: @award.GhiChu</p>
+                            }
                         </div>
-
-                        <div id="film-4" class="film hidden">
-                            <div class="content">
-                                <h3 class="title">
-                                    @row3.TenPhim>
-                                    <p class="award">*---Cánh diều bạc - Phim chiếu rạp---*</p>
-                                    <p class="text">@row3.GioiThieuPhim</p>
-
-                                    <p class="text">Nội dung:</p>
-                                    <p class="text">@row3.NoiDungPhim</p>
-                            </div>
-                            <div class="trailer col-md-8">
-                                <iframe width="560" height="315" src="@row3.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="more-info col-md-4">
-                                <div class="top">
-                                    <p class="text">Đạo diễn: @row3.DaoDien</p>
-                                    <p class="text">Nhà sản xuất: @row3.Nhasanxuat</p>
-                                    <p class="text">Diễn viên: @row3.DienVien</p>
-                                    <p class="text">Doanh thu: @row3.DoanhThu</p>
-                                </div>
-                                <div class="bottom">
-                                    <a href="./filmpage.cshtml">
-                                        <div class="btn-view-more btn">XEM THÊM</div>
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="bottom">
+                            <a href="./filmpage.cshtml">
+                                <div class="btn-view-more btn">XEM THÊM</div>
+                            </a>
                         </div>
-                    }
-                }
+                    </div>
+                </div>
+                i = i + 2;
             }
         }
     </div>
@@ -367,138 +258,63 @@
     <h3 class="title">Thông tin nghệ sĩ đạt giải</h3>
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <div class="info-content col-md-12">
-                    <div class="gr-row-lg">
-                        <div class="avatar">
-                            <img src="~/Images/kmt.jpg">
-                        </div>
-                        <p class="name">KIỀU MINH TUẤN</p>
-                        <p class="job">--Nam diễn viên chính xuất sắc--</p>
-                        <p class="text">Tên thật: Kiều Minh Tuấn</p>
-                        <p class="text">Biệt danh: Không có</p>
-                        <p class="text">Ngày sinh: ngày 26 tháng 2 năm 1988</p>
-                        <p class="text">Quê quán: Bà Rịa - Vũng Tàu, Việt Nam</p>
-                    </div>
-                    <div class="gr-row-sm">
-                        <hr />
+            @foreach (var actor in actorList)
+            {
+                <div class="swiper-slide">
+                    <div class="info-content col-md-12">
                         <div class="gr-row-lg">
-                            <p class="text"> Anh được biết đến qua các phim điện ảnh như: Bụi đời Chợ Lớn (2013), Scandal 2: Hào quang trở lại (2014), Em chưa 18 (2017), Lật mặt: Ba chàng khuyết (2018), Chú ơi đừng lấy mẹ con (2018).</p>
+                            <div class="avatar">
+                                <img src="@actor.AnhDaiDienDV">
+                            </div>
+                            <p class="name">@actor.TenDV</p>
+                            <p class="job">--@actor.TenGiaiThuongDienVien--</p>
+                            <p class="text">Tên thật: @actor.TenThatDV</p>
+                            <p class="text">Biệt danh: @actor.BietDanhDV</p>
+                            <p class="text">Ngày sinh: @actor.NgaySinhDV</p>
+                            <p class="text">Quê quán: @actor.QueQuanDV</p>
                         </div>
-                        <div class="gr-row-sm row">
-                            <a href="./actorpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
+                        <div class="gr-row-sm">
+                            <hr />
+                            <div class="gr-row-lg">
+                                <p class="text">@actor.SoLuocDV</p>
+                            </div>
+                            <div class="gr-row-sm row">
+                                <a href="./actorpage.cshtml">
+                                    <div class="btn-view-more btn">XEM THÊM</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="info-content col-md-12">
-                    <div class="gr-row-lg">
-                        <div class="avatar">
-                            <img src="~/Images/np.jpg">
-                        </div>
-                        <p class="name">NHÃ PHƯƠNG</p>
-                        <p class="job">--Nữ diễn viên chính xuất sắc--</p>
-                        <p class="text">Tên thật: Trần Thị Nhã Phương</p>
-                        <p class="text">Biệt danh: Nabi Nhã Phương</p>
-                        <p class="text">Ngày sinh: ngày 20 tháng 5 năm 1990</p>
-                        <p class="text">Quê quán: Đắk Lắk, Việt Nam</p>
-                    </div>
-                    <div class="gr-row-sm">
-                        <hr />
-                        <div class="gr-row-lg">
-                            <p class="text">Cô được biết đến qua các phim như Những thiên thần áo trắng, Gia đình số đỏ, Hoa nắng, Cô nàng nặng cân, Quả tim máu, Vừa đi vừa khóc, Tuổi thanh xuân, Ngày ấy mình đã yêu.</p>
-                        </div>
-                        <div class="gr-row-sm row">
-                            <a href="~/actorpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="info-content col-md-12">
-                    <div class="gr-row-lg">
-                        <div class="avatar">
-                            <img src="~/Images/npv.jpg">
-                        </div>
-                        <p class="name">NHAN PHÚC VINH</p>
-                        <p class="job">--Nam diễn viên phụ xuất sắc--</p>
-                        <p class="text">Tên thật: Nhan Phúc Vinh</p>
-                        <p class="text">Biệt danh: không có</p>
-                        <p class="text">Ngày sinh: ngày 27 tháng 6 năm 1986</p>
-                        <p class="text">Quê quán: TP.Cần Thơ, Việt Nam</p>
-                    </div>
-                    <div class="gr-row-sm">
-                        <hr />
-                        <div class="gr-row-lg">
-                            <p class="text">Nhan Phúc Vinh là một nam diễn viên kiêm người mẫu nổi tiếng của làng giải trí Việt Nam. Anh từng giành nhiều giải thưởng trong các cuộc thi người mẫu, và cũng đã có nhiều vai diễn ấn tượng.</p>
-                        </div>
-                        <div class="gr-row-sm row">
-                            <a href="./actorpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="info-content col-md-12">
-                    <div class="gr-row-lg">
-                        <div class="avatar">
-                            <img src="~/Images/md.jpg">
-                        </div>
-                        <p class="name">MIDU</p>
-                        <p class="job">--Nam diễn viên phụ xuất sắc--</p>
-                        <p class="text">Tên thật: Đặng Thị Mỹ Dung</p>
-                        <p class="text">Biệt danh: Midu</p>
-                        <p class="text">Ngày sinh: ngày 5 tháng 10 năm 1989</p>
-                        <p class="text">Quê quán: TP.Hồ Chí Minh, Việt Nam</p>
-                    </div>
-                    <div class="gr-row-sm">
-                        <hr />
-                        <div class="gr-row-lg">
-                            <p class="text">Midu là một nữ diễn viên, người mẫu ảnh Việt Nam. Cô từng tham gia phim điện ảnh Thiên mệnh anh hùng của đạo diễn Victor Vũ. Cô là cựu sinh viên của trường Đại học Kiến trúc thành phố Hồ Chí Minh.</p>
-                        </div>
-                        <div class="gr-row-sm row">
-                            <a href="./actorpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
         <div class="swiper-pagination"></div>
     </div>
 </section>
 <section id="contact-us">
     <h3 class="title">Liên hệ với chúng tôi</h3>
-    <form action="#">
+    <form method="post" action="~/sendEmail.cshtml">
         <div class="row contact-us-form">
             <div class="col-md-6">
                 <div class="form-col">
                     <label class="form-row">Tên khán thính giả:</label>
-                    <input class="form-row" type="text" name="user-name" placeholder="Nhập tên khán thính giả">
+                    <input class="form-row" type="text" name="customerName" placeholder="Nhập tên khán thính giả">
                 </div>
                 <div class="form-col">
                     <label class="form-row">Địa chỉ email:</label>
-                    <input class="form-row" type="email" name="email" placeholder="Nhập địa chỉ email">
+                    <input class="form-row" type="email" name="customerEmail" placeholder="Nhập địa chỉ email">
                 </div>
                 <div class="form-col">
                     <label class="form-row">Tiêu đề:</label>
-                    <input class="form-row" type="text" name="title-contact" placeholder="Nhập tiêu đề">
+                    <input class="form-row" type="text" name="emailTitle" placeholder="Nhập tiêu đề">
                 </div>
                 <div class="form-col">
                     <label class="form-row">Nội dung:</label>
-                    <textarea class="form-row" id="txtContent-Contact-Us"></textarea>
+                    <textarea class="form-row" id="txtContent-Contact-Us" name="customerRequest"></textarea>
                 </div>
                 <div class="row row-btn">
                     <a>
-                        <div class="btn btn-view-more">GỬI LỜI NHẮN</div>
+                        <input class="btn btn-view-more" type="submit" value="GỬI LỜI NHẮN">
                     </a>
                 </div>
                 <blockquote>Xin chân thành cám ơn bạn đã đóng góp ý kiến!</blockquote>

@@ -9,6 +9,10 @@ body {
   padding: 0;
   position: relative; }
 
+input[type='submit']{
+    background-color: white;
+}
+
 @keyframes showBlock {
   to {
     opacity: 0; }

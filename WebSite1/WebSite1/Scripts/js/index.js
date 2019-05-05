@@ -1,10 +1,10 @@
 $(document).ready(function () {
     var swiper = new Swiper('#kv .swiper-container',{
         speed: 800,
-        // autoplay: {
-        //     delay: 5000,
-        //     disableOnInteraction: false,
-        // },
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
         loop: true,
         pagination:{
             el: '.swiper-pagination',

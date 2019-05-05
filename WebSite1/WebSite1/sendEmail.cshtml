@@ -1,0 +1,17 @@
+﻿@{
+    var cusName = Request["customerName"];
+    var emailTitle = Request["emailTitle"];
+    var cusEmail = Request["customerEmail"];
+    var cusRequest = Request["customerRequest"];
+
+    //send email
+    try
+    {
+        WebMail.Send(to: "tranhungquang23497@gmail.com", subject: emailTitle, body: "Tôi tên là: " + cusName + "\n" + cusRequest,from: cusEmail);
+        <text>Gửi emial thành công</text>
+    }
+    catch (Exception ex)
+    {
+        <text>@ex</text>
+    }
+}

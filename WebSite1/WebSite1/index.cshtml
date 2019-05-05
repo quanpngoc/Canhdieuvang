@@ -3,6 +3,12 @@
     Page.Title = "Trang chủ - Giải thưởng cánh diều vàng";
 }
 
+@{
+    var db = Database.Open("DefaultConnection");
+    var selectQueryString = "SELECT * FROM Phim Where GiaiThuong='Canh dieu vang'";
+
+}
+
 <!--Begin page content-->
 <section id="kv">
     <div class="swiper-container">
@@ -230,113 +236,131 @@
         </div>
     </div>
     <div class="panel-content">
-        <div id="film-1" class="film hidden">
-            <div class="content">
-                <h3 class="title">Cô Ba Sài Gòn</h3>
-                <p class="award">*---Cánh diều vàng - Phim chiếu rạp---*</p>
-                <p class="text">Cô Ba Sài Gòn (tựa tiếng Anh: The Tailor) là một bộ phim điện ảnh Việt Nam về đề tài thời trang mang yếu tố xuyên không kỳ ảo do Trần Bửu Lộc và Kay Nguyễn làm đạo diễn, Ngô Thanh Vân và Thủy Nguyễn đóng vai trò sản xuất, dựa theo phần kịch bản của A Type Machine. Phim có sự tham gia của các diễn viên Ninh Dương Lan Ngọc, NSND Hồng Vân, Diễm My, Ngô Thanh Vân, Diễm My 9x, S.T 365 và Oanh Kiều. Chủ đề chính của phim là tôn vinh áo dài, trang phục truyền thống của Việt Nam.</p>
-                <p class="text">Phim có buổi công chiếu đầu tiên trên toàn thế giới vào ngày 14 tháng 10 năm 2017 tại Liên hoan phim quốc tế Busan lần thứ 22 ở Hàn Quốc trước khi ra mắt công chúng Việt Nam vào ngày 10 tháng 11 cùng năm. Sau gần một tháng công chiếu, phim thu về hơn 60 tỷ đồng. Tại Liên hoan phim Việt Nam lần thứ 20, Cô Ba Sài Gòn giành hai giải, bao gồm Giải thưởng của Ban giám khảo.</p>
-                <p class="text">Nội dung:</p>
-                <p class="text">Năm 1969, nhà may Thanh Nữ là nhà may áo dài nổi tiếng nhất Sài Gòn. Gia đình này 9 đời đều may áo dài. Bà chủ Thanh Mai có hai cô con gái: cô con gái ruột Như Ý và cô con gái nuôi Thanh Loan. Thanh Loan thích may áo dài nhưng Như Ý lại thích thiết kế đồ Tây, vì cô cho rằng áo dài đã quá xưa và chỉ có một kiểu. Bà Thanh Mai kêu Như Ý hãy học cách may áo dài nhưng cô không quan tâm, cô chỉ thích thiết kế đồ Tây. Một hôm bà Thanh Mai lấy tấm vải quý của gia tộc ra may thành chiếc áo dài cực kỳ đẹp, rồi để bên dưới nhà. Như Ý thấy chiếc áo dài đẹp quá (có đính tên Như Ý trên áo) nên lấy mặc thử. Một điều kỳ lạ đã xảy ra, khi cô mặc chiếc áo dài vào, miếng ngọc trên chiếc áo đã cuốn cô vào dòng thời gian, đưa cô đến năm 2017.</p>
-                <p class="text">Khi bà An Khánh (chính là hiện thân của Như Ý) đang chuẩn bị tự tử thì Như Ý rơi xuống, đẩy bà ấy ngã và rồi miếng ngọc trên áo bị văng mất. Như Ý ngạc nhiên khi thấy nhà may Thanh Nữ bị dỡ bỏ, nhà cửa tan hoang, không dám tin khi thấy chính mình trong tương lai, hoang mang và sợ hãi khi thấy Sài Gòn xưa của cô đã biến mất, thay vào đó là Sài Gòn 2017 văn minh hiện đại. Căn nhà trở nên hoang tàn, không còn náo nhiệt như ngày xưa. Bộ phim tiết lộ khi bà Thanh Mai mất, bà An Khánh đuổi Thanh Loan ra khỏi nhà để mở tiệm may đồ Tây, tuy nhiên lại sớm dẹp tiệm. Bà An Khánh trở thành kẻ thất bại và nghiện rượu. Thanh Loan ra ngoài mở một tiệm may áo dài, sau này cô sinh hai đứa con: Helen và Tuấn. Helen bây giờ đang là nhà thiết kế thời trang nổi tiếng, còn Tuấn đang làm ở công ty của Helen.</p>
-                <p class="text">Helen đồng ý giúp bà An Khánh giữ lại căn nhà, đổi lại Như Ý phải làm nhân viên cho Helen. Như Ý làm lao công một thời gian, chính Tuấn giúp cho cô làm quen với cuộc sống hiện đại này. Đến khi công ty cần thiết kế mấy bộ đồ Tây của thập niên 1960, đúng với sở trường của mình, Như Ý đã giúp Helen thiết kế. Ấn tượng trước khả năng thiết kế của Như Ý, lần tiếp theo Helen giao cho Như Ý công việc thiết kế áo dài. Đây là một thử thách lớn đối với Như Ý, vì cô vốn ghét áo dài và không hề biết may áo dài. Nhưng cô cũng rất muốn thiết kế áo dài theo cách gia truyền của nhà may Thanh Nữ, điều này sẽ giúp nhà may Thanh Nữ có lại danh tiếng và sẽ được phục dựng trở lại.</p>
-                <p class="text">Bà An Khánh đến gặp bà Thanh Loan để xin lỗi và xin học cách may áo dài. Bà Thanh Loan đưa cho bà An Khánh một phong bì, trong đó là lá thư của bà Thanh Mai chỉ cách may áo dài. Bà An Khánh và Như Ý cùng nhau tập may áo dài.</p>
-                <p class="text">Đến ngày diễn ra sự kiện thời trang, người mẫu Trang Ngô cùng với những cô người mẫu khác trình diễn những chiếc áo dài do chính Như Ý thiết kế. Trong lúc buổi biểu diễn đang được tiếp tục, Helen có ý định thay đổi kịch bản để tên mình được vinh danh thay vì Như Ý nhưng bị Tuấn bắt được rồi yêu cầu cô sửa đổi kịch bản và suy nghĩ lại việc làm của cô. Cuối cùng, buổi biểu diễn rất thành công và Như Ý đứng lên phát biểu đôi lời, cô cũng gửi lời cám ơn đến Helen. Sau ngày hôm đó, nhà may Thanh Nữ được phục dựng trở lại.</p>
-                <p class="text">Như Ý mặc chiếc áo dài có miếng ngọc, miếng ngọc kỳ diệu đó lại cuốn cô vào dòng thời gian, đưa cô về lại năm 1969. Cô gặp lại bà Thanh Mai, cô ôm lấy mẹ mình rồi nói xin lỗi rồi nói với mẹ mình rằng mình đã biết may áo dài. Hai mẹ con sau đó mở nhạc lên và đứng nhảy.</p>
-                <p class="text">Trong đoạn cảnh hậu Danh đề, truyền nhân thứ 20 nhà may Thanh Nữ đi tham quan xung quanh nhà mình và có những câu cửa miệng rất giống Như Ý như "Ô la la" và cuối cùng nói "Hết rồi!" để kết thúc bộ phim.</p>
-            </div>
-            <div class="trailer col-md-8">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/YP4TDQVkZO4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="more-info col-md-4">
-                <div class="top">
-                    <p class="text">Đạo diễn: Trần Bửu Lộc, Kay Nguyễn</p>
-                    <p class="text">Nhà sản xuất: Ngô Thanh Vân, Thủy Nguyễn</p>
-                    <p class="text">Diễn viên: Ninh Dương Lan Ngọc, NSND Hồng Vân, Diễm My, Ngô Thanh Vân, Diễm My 9x, S.T 365, Oanh Kiều</p>
-                    <p class="text">Doanh thu: 60 tỷ VND</p>
-                </div>
-                <div class="bottom">
-                    <a href="./filmpage.cshtml">
-                        <div class="btn-view-more btn">XEM THÊM</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div id="film-2" class="film hidden">
-            <div class="content">
-                <h3 class="title">Em chưa 18</h3>
-                <p class="award">*---Cánh diều bạc - Phim chiếu rạp---*</p>
-                <p class="text">Em chưa 18 là bộ phim điện ảnh tình cảm hài hước Việt Nam của đạo diễn Lê Thanh Sơn thực hiện, do Charlie Nguyễn và hãng phim Chánh Phương sản xuất năm 2017. Phim có sự góp mặt của các diễn viên: Kiều Minh Tuấn, Kaity Nguyễn, Will 365, Quang Minh, Huy Khánh. Em chưa 18 được công chiếu vào ngày 28 tháng 04 năm 2017 tại các rạp trên toàn quốc.</p>
-                <p class="text">Em chưa 18 nhanh chóng trở thành phim có doanh thu phim Việt cao nhất mọi thời đại. Tại Liên hoan phim Việt Nam lần thứ 20, phim đoạt giải Bông Sen Vàng và diễn viên Kaity Nguyễn đoạt giải Nữ diễn viên chính xuất sắc.</p>
-                <p class="text">Nội dung phim:</p>
-                <p class="text">Hoàng là một người huấn luyện viên yoga, mà cũng là một tay chơi sát gái, thường qua đêm với các cô gái. Trớ trêu thay, một lần nọ Hoàng tán tỉnh và quan hệ với một cô bé chưa đủ 18 tuổi tên Linh Đan.Linh Đan đã quay lại đoạn clip đêm đó và bắt buộc Hoàng phải làm bạn trai của cô. Trước đây Linh Đan từng bị bạn trai trong trường phản bội, bây giờ cô muốn dùng Hoàng để chọc tức bạn trai cũ.Trong thời gian giả làm bạn trai mới của Linh Đan, Hoàng đã dạy yoga cho một nữ diễn viên tên Uyên Thi. Hoàng biết được kế hoạch của Linh Đan và la mắng cô. Tony - bạn trai cũ của Linh Đan vẫn đang vui vẻ bên cô hot girl Yến, chứ không hề bị đau khổ như Linh Đan nghĩ. Linh Đan khóc và đưa điện thoại cho Hoàng xóa cái clip. Cứ tưởng sẽ không gặp nhau nữa, nhưng Hoàng vẫn thường xuyên đưa đón Linh Đan đi học, chở Linh Đan đi chơi. Trong trường của Linh Đan sắp tổ chức một đêm vũ hội cuối năm, Tony đang là ứng cử viên nặng ký cho chức King, còn Linh Đan và Yến đang là ứng cử viên nặng ký cho chức Queen. Linh Đan nói với Hoàng rằng cô đã có thai, Hoàng liền kêu cô đi phá thai nhưng cô từ chối. Ông chủ của trung tâm yoga hốt hoảng khi nghe tin Hoàng đã làm cho một đứa con gái chưa đủ 18 tuổi có thai, nên đã đuổi việc Hoàng. Hoàng gọi điện cho ba và nghe ông tâm sự về quá khứ của ông, sau đó Hoàng suy nghĩ lại. Hoàng mua những món đồ dành cho em bé, rồi anh cầu hôn Linh Đan. Nhưng Linh Đan tiết lộ rằng cô không hề có thai và vào đêm hôm đó cô và Hoàng chưa xảy ra chuyện gì cả. Hoàng nhận ra mình đã yêu Linh Đan thật rồi, anh từ chối ngủ với Uyên Thi và chạy đến đêm vũ hội. Hoàng còn gọi điện kêu ba của Linh Đan chở cô đến vũ hội. Tại đây, Tony và Linh Đan đã giành được chức King và Queen. Tony bảo Linh Đan hãy đến với tình yêu thật sự của cô. Sau đó Hoàng và Linh Đan công khai tình cảm, rồi họ hôn nhau. Bộ phim kết thúc.</p>
-            </div>
-            <div class="trailer col-md-8">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/_affkHceSj4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="more-info col-md-4">
-                <div class="top">
-                    <p class="text">Đạo diễn: Lê Thanh Sơn</p>
-                    <p class="text">Nhà sản xuất: Charlie Nguyễn</p>
-                    <p class="text">Diễn viên: Kiều Minh Tuấn, Kaity Nguyễn, Will 365, Châu Bùi, Quang Minh, Nguyễn Chánh Tín, Huy Khánh, Kathy Uyên, Don Nguyễn</p>
-                    <p class="text">Doanh thu: 171 tỷ VND</p>
-                </div>
-                <div class="bottom">
-                    <a href="./filmpage.cshtml">
-                        <div class="btn-view-more btn">XEM THÊM</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div id="film-3" class="film hidden">
-            <div class="content">
-                <h3 class="title">Thương nhớ ở ai</h3>
-                <p class="award">*---Cánh diều vàng - Phim truyền hình---*</p>
-                <p class="text">là một phim truyền hình của đạo diễn Lưu Trọng Ninh và Bùi Thọ Thịnh, trình chiếu lần đầu ngày 4 tháng 11 năm 2017 và kết thúc ngày 4 tháng 3 năm 2018 .</p>
-                <p class="text">Nội dung phim:</p>
-                <p class="text">Truyện phim mô tả số phận những người đàn bà thôn dã Bắc Bộ thời chiến.</p>
-                <p class="text">Anh bộ đội phục viên Nguyễn Văn Vạn trở về làng Đông, nơi anh được sinh trưởng trong thân phận đứa ở nhà địa chủ. Do thất tình, Vạn nhảy xuống sông bơi đi khỏi làng, người ta tưởng anh đã tự tử vì lụy tình thì nay anh đột nhiên "sống lại". Sau khi rời làng, Vạn nhập ngũ tham gia kháng chiến chống Pháp. Sau chiến dịch Điện Biên Phủ, Vạn về làng với tư cách một người hùng, một cựu binh với nhiều huân chương, trên người có vài vết thương trong chiến đấu. Những tưởng sau bao bão táp cuộc đời, Vạn được sống trong bình yên của quê cũ, nhưng bao điều diễn ra sau đó lại rất trái ngược và xa lạ với tâm thức của anh. Để giữ gìn uy tín của người cựu binh, anh không dám đến với người yêu cũ là bà Nhân, do bà nay đã là vợ liệt sỹ. Đời sống của những người trong làng cũng bị những tập tục cũ trói buộc, như hôn nhân đa thê, hoặc sự đối địch giữa 2 dòng họ khiến con cháu không được kết hôn...</p>
-            </div>
-            <div class="trailer col-md-8">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/gXB95CJbpmE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="more-info col-md-4">
-                <div class="top">
-                    <p class="text">Đạo diễn: Lưu Trọng Ninh, Bùi Thọ Thịnh</p>
-                    <p class="text">Nhà sản xuất: Trung tâm Sản xuất Phim truyền hình Việt Nam</p>
-                    <p class="text">Diễn viên: Lâm Vissay, Ngọc Anh, Hồng Kim Hạnh, Trà My</p>
-                    <p class="text">Phát sóng tại: VTV3 (33 tập)</p>
-                </div>
-                <div class="bottom">
-                    <a href="./filmpage.cshtml">
-                        <div class="btn-view-more btn">XEM THÊM</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div id="film-4" class="film hidden">
-            <div class="content">
-                <h3 class="title">Lặng yên dưới vực sâu</h3>
-                <p class="award">*---Cánh diều bạc - Phim truyền hình---*</p>
-                <p class="text">Tiểu thuyết ngắn của Đỗ Bích Thúy dựng thành phim truyền hình dài tập Lặng Yên Dưới Vực Sâu đang chiếu trên Rubic 8 vào cuối tuần (đang là tháng 4/2017). Mình biết đến cuốn sách này khi đợi xem HIMYM lúc 22h45 trên VTV2. Trước khi có phim thì VTV hay chiếu bài hát Lặng Yên (song ca Bùi Anh Tuấn – Ái Phương), mình nghe mãi thành quen nên down về nghe, rồi ám ảnh, rồi tìm sách đọc, rồi như sống ở miền núi U Khố Sủ (thuộc huyện Hoàng Su Phì, tỉnh Hà Giang) trong 2 ngày cuối tuần. Sách in bìa bóng, rất đẹp. Hình ảnh cô gái người Mông “tĩnh lặng” đứng cúi xuống nhìn vực sâu cũng rất hợp và gây ám ảnh. Các nét chấm phá khác như lá cây, bụi và đá sỏi lăn xuống vực khiến người nhìn cảm thấy “động”.</p>
-            </div>
-            <div class="trailer col-md-8">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/TqreH2YRpgY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="more-info col-md-4">
-                <div class="top">
-                    <p class="text">Đạo diễn: Đỗ Thanh Hải</p>
-                    <p class="text">Nhà sản xuất: Trung tâm Sản xuất Phim truyền hình Việt Nam</p>
-                    <p class="text">Diễn viên: NSND Bùi Bài Bình, NSƯT Tiến Mộc, Nguyễn Đình Tú , Phương Oanh, Doãn Quốc Đam, Hương Giang, Minh Phương</p>
-                    <p class="text">Phát sóng tại: VTV3 (32 tập)</p>
-                </div>
-                <div class="bottom">
-                    <a href="./filmpage.cshtml">
-                        <div class="btn-view-more btn">XEM THÊM</div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        @foreach (var row in db.Query(selectQueryString))
+        {
+            foreach (var row1 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu bac'"))
+            {
+
+                foreach (var row2 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu vang truyen hinh'"))
+                {
+                    foreach (var row3 in db.Query("SELECT * FROM Phim Where GiaiThuong='Canh dieu bac truyen hinh'"))
+                    {
+                        <div id="film-1" class="film hidden">
+                            <div class="content">
+
+                                <h3 class="title">
+                                    @row.TenPhim>
+                                    <p class="award">*---Cánh diều vàng - Phim chiếu rạp---*</p>
+                                    <p class="text">@row.GioiThieuPhim</p>
+
+                                    <p class="text">Nội dung:</p>
+                                    <p class="text">@row.NoiDungPhim</p>
+                            </div>
+                            <div class="trailer col-md-8">
+                                <iframe width="560" height="315" src="@row.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="more-info col-md-4">
+                                <div class="top">
+                                    <p class="text">Đạo diễn: @row.DaoDien</p>
+                                    <p class="text">Nhà sản xuất: @row.Nhasanxuat</p>
+                                    <p class="text">Diễn viên: @row.DienVien</p>
+                                    <p class="text">Doanh thu: @row.DoanhThu</p>
+                                </div>
+                                <div class="bottom">
+                                    <a href="./filmpage.cshtml">
+                                        <div class="btn-view-more btn">XEM THÊM</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="film-2" class="film hidden">
+                            <div class="content">
+                                <h3 class="title">
+                                    @row1.TenPhim>
+                                    <p class="award">*---Cánh diều bạc - Phim chiếu rạp---*</p>
+                                    <p class="text">@row1.GioiThieuPhim</p>
+
+                                    <p class="text">Nội dung:</p>
+                                    <p class="text">@row1.NoiDungPhim</p>
+                            </div>
+                            <div class="trailer col-md-8">
+                                <iframe width="560" height="315" src="@row1.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="more-info col-md-4">
+                                <div class="top">
+                                    <p class="text">Đạo diễn: @row1.DaoDien</p>
+                                    <p class="text">Nhà sản xuất: @row1.Nhasanxuat</p>
+                                    <p class="text">Diễn viên: @row1.DienVien</p>
+                                    <p class="text">Doanh thu: @row1.DoanhThu</p>
+                                </div>
+                                <div class="bottom">
+                                    <a href="./filmpage.cshtml">
+                                        <div class="btn-view-more btn">XEM THÊM</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="film-3" class="film hidden">
+                            <div class="content">
+
+                                <h3 class="title">
+                                    @row2.TenPhim>
+                                    <p class="award">*---Cánh diều vàng - Phim chiếu rạp---*</p>
+                                    <p class="text">@row2.GioiThieuPhim</p>
+
+                                    <p class="text">Nội dung:</p>
+                                    <p class="text">@row2.NoiDungPhim</p>
+                            </div>
+                            <div class="trailer col-md-8">
+                                <iframe width="560" height="315" src="@row2.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="more-info col-md-4">
+                                <div class="top">
+                                    <p class="text">Đạo diễn: @row2.DaoDien</p>
+                                    <p class="text">Nhà sản xuất: @row2.Nhasanxuat</p>
+                                    <p class="text">Diễn viên: @row2.DienVien</p>
+                                    <p class="text">Doanh thu: @row2.DoanhThu</p>
+                                </div>
+                                <div class="bottom">
+                                    <a href="./filmpage.cshtml">
+                                        <div class="btn-view-more btn">XEM THÊM</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="film-4" class="film hidden">
+                            <div class="content">
+                                <h3 class="title">
+                                    @row3.TenPhim>
+                                    <p class="award">*---Cánh diều bạc - Phim chiếu rạp---*</p>
+                                    <p class="text">@row3.GioiThieuPhim</p>
+
+                                    <p class="text">Nội dung:</p>
+                                    <p class="text">@row3.NoiDungPhim</p>
+                            </div>
+                            <div class="trailer col-md-8">
+                                <iframe width="560" height="315" src="@row3.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="more-info col-md-4">
+                                <div class="top">
+                                    <p class="text">Đạo diễn: @row3.DaoDien</p>
+                                    <p class="text">Nhà sản xuất: @row3.Nhasanxuat</p>
+                                    <p class="text">Diễn viên: @row3.DienVien</p>
+                                    <p class="text">Doanh thu: @row3.DoanhThu</p>
+                                </div>
+                                <div class="bottom">
+                                    <a href="./filmpage.cshtml">
+                                        <div class="btn-view-more btn">XEM THÊM</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
     </div>
 </section>
 <section id="actor-awarded">
@@ -513,7 +537,6 @@
     </div>
 </section>
 <!--End page content-->
-
 <!--Script js for page-->
 @section scripts{
     <script type="text/javascript" src="~/Scripts/js/index.js"></script>

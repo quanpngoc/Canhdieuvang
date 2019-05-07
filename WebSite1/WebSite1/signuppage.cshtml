@@ -10,6 +10,17 @@
 
 @if (IsPost)
 {
+    //get values of this form
+    string name = Request.Form["name"];
+    string email = Request.Form["email"];
+    string birthday = Request.Form["birthday"];
+    string phonenumber = Request.Form["phonenumber"];
+    string facebook = Request.Form["facebook"];
+    string check = Request.Form["check"];
+
+    Response.Write(check);
+
+    //check image file exist
     if (Request.Files["file"] != null)
     {
         HttpPostedFileBase MyFile = Request.Files["file"];
@@ -26,14 +37,27 @@
                 //get size of this file
                 int FileSize = MyFile.ContentLength;
 
+                //get type of this file
+                string[] arrListStr = FileName.Split('.');
+                string typeFile = arrListStr[arrListStr.Length - 1];
+                FileName = arrListStr[0];
+                //Response.Write(typeFile);
+
+                //format file name 
+                DateTime day = DateTime.Now;
+                FileName = FileName + day + "." + typeFile;
+                FileName = FileName.Replace(" ", "_");
+                FileName = FileName.Replace("/", "-");
+                FileName = FileName.Replace(":", "-");
+
                 byte[] FileByteArray = new byte[FileSize];
                 MyFile.InputStream.Read(FileByteArray, 0, FileSize);
 
                 //upload to server
                 MyFile.SaveAs(TargetLocation + FileName);
 
-                var file = "Images/Users/" + FileName;
-
+                // get link of this file after upload file
+                var file = "Images/User/" + FileName;
                 Response.Write(file);
             }
         }
@@ -62,16 +86,16 @@ else
                 <div class="right-form">
                     <div class="pick-avatar">
                         <img id="frame" ondrop="drop(event)" ondragover="allowDrop(event)"></img>
-                        <input class="choose-img" type="file" runat="Server" name="file" value="CHỌN ẢNH TỪ MÁY">
+                        <input class="choose-img" type="file" accept="image/*" runat="Server" name="file" value="CHỌN ẢNH TỪ MÁY">
                     </div>
                     <div class="attr-element">
                         <label>Họ tên:</label>
-                        <input type="text" name="email" placeholder="Nhập họ tên của bạn">
+                        <input type="text" name="name" placeholder="Nhập họ tên của bạn">
                     </div>
                     <div class="attr-element">
                         <label>Ngày tháng năm sinh:</label>
                         <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' class="form-control" />
+                            <input type='text' name="birthday" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -92,7 +116,7 @@ else
                     <div class="considtion-readed">
                         <label class="container">
                             Tôi đã đọc và đồng ý với các <a id="condition">Điều kiện &amp; điều khoản</a>
-                            <input type="checkbox" checked="true">
+                            <input type="checkbox" name="check" checked="true">
                             <span class="checkmark"></span>
                         </label>
                     </div>

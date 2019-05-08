@@ -16,59 +16,109 @@
     string birthday = Request.Form["birthday"];
     string phonenumber = Request.Form["phonenumber"];
     string facebook = Request.Form["facebook"];
+    string tendangnhap = Request.Form["tendangnhap"];
+    string password1 = Request.Form["password1"];
+    string password2 = Request.Form["password2"];
     string check = Request.Form["check"];
+    string file = null;
 
-    Response.Write(check);
-
-    //check image file exist
-    if (Request.Files["file"] != null)
+    //check empty values
+    if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(email)
+&& !string.IsNullOrWhiteSpace(birthday) && !string.IsNullOrWhiteSpace(phonenumber)
+&& !string.IsNullOrWhiteSpace(facebook) && !string.IsNullOrWhiteSpace(check)
+&& !string.IsNullOrWhiteSpace(tendangnhap) && !string.IsNullOrWhiteSpace(password1)
+&& !string.IsNullOrWhiteSpace(password2))
     {
-        HttpPostedFileBase MyFile = Request.Files["file"];
-
-        //setting location to upload file
-        string TargetLocation = Server.MapPath("~/Images/Users/");
-
-        try
+        //check password
+        if (password1 == password2)
         {
-            if (MyFile.ContentLength > 0)
+            // password1 same as password2
+            //check TenDangNhap and insert data
+            var db = Database.Open("DefaultConnection");
+
+            var sql_check = "select * from Users where TenDangNhap = '" + tendangnhap + "'";
+
+            var result = db.QuerySingle(sql_check);
+
+            if (result != null)
             {
-                //get name of this file
-                string FileName = MyFile.FileName;
-                //get size of this file
-                int FileSize = MyFile.ContentLength;
+                // this username exist
+                Response.Write("tên tài khoản đã tồn tại");
+            }
+            else
+            {
+                // this username don't exist and can insert
 
-                //get type of this file
-                string[] arrListStr = FileName.Split('.');
-                string typeFile = arrListStr[arrListStr.Length - 1];
-                FileName = arrListStr[0];
-                //Response.Write(typeFile);
+                //check image file exist and upload file
+                if (Request.Files["file"] != null)
+                {
+                    //this file exist
+                    HttpPostedFileBase MyFile = Request.Files["file"];
 
-                //format file name 
-                DateTime day = DateTime.Now;
-                FileName = FileName + day + "." + typeFile;
-                FileName = FileName.Replace(" ", "_");
-                FileName = FileName.Replace("/", "-");
-                FileName = FileName.Replace(":", "-");
+                    //setting location to upload file
+                    string TargetLocation = Server.MapPath("~/Images/Users/");
 
-                byte[] FileByteArray = new byte[FileSize];
-                MyFile.InputStream.Read(FileByteArray, 0, FileSize);
+                    try
+                    {
+                        if (MyFile.ContentLength > 0)
+                        {
+                            //get name of this file
+                            string FileName = MyFile.FileName;
+                            //get size of this file
+                            int FileSize = MyFile.ContentLength;
 
-                //upload to server
-                MyFile.SaveAs(TargetLocation + FileName);
+                            //get type of this file
+                            string[] arrListStr = FileName.Split('.');
+                            string typeFile = arrListStr[arrListStr.Length - 1];
+                            FileName = arrListStr[0];
+                            //Response.Write(typeFile);
 
-                // get link of this file after upload file
-                var file = "Images/User/" + FileName;
-                Response.Write(file);
+                            //format file name 
+                            DateTime day = DateTime.Now;
+                            FileName = FileName + day + "." + typeFile;
+                            FileName = FileName.Replace(" ", "_");
+                            FileName = FileName.Replace("/", "-");
+                            FileName = FileName.Replace(":", "-");
+
+                            byte[] FileByteArray = new byte[FileSize];
+                            MyFile.InputStream.Read(FileByteArray, 0, FileSize);
+
+                            //upload to server
+                            MyFile.SaveAs(TargetLocation + FileName);
+
+                            // get link of this file after upload file
+                            file = "Images/Users/" + FileName;
+                            Response.Write(file);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Response.Write(e.Message);
+                    }
+                }
+                else
+                {
+                    //this file don't exist
+                    Response.Write("không có file");
+                }
+
+                //insert data of new user
+                var sql = "insert into Users (TenNguoiDung, TenDangNhap, MatKhau, HinhAnhNguoiDung, NgaySinhNguoiDung, Email, SDT, FaceBook, Level) " +
+                    "values (@0, @1, @2, @3, @4, @5, @6, @7, @8)";
+                db.Execute(sql, name, tendangnhap, password1, file, birthday, email, phonenumber, facebook, 1);
+                db.Close();
             }
         }
-        catch (Exception e)
+        else
         {
-            Response.Write("ngoại lệ");
+            //the password don't same
+            Response.Write("mật khẩu không khớp");
         }
     }
     else
     {
-        Response.Write("không có file");
+        //Not fully entered information
+        Response.Write("chưa nhập đầy đủ thông tin nha bạn trẻ");
     }
 }
 else
@@ -95,7 +145,7 @@ else
                     <div class="attr-element">
                         <label>Ngày tháng năm sinh:</label>
                         <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' name="birthday" class="form-control" />
+                            <input type='date' name="birthday" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -113,6 +163,18 @@ else
                         <label>Địa chỉ facebook (nếu có):</label>
                         <input type="text" name="facebook" placeholder="Nhập địa chỉ facebook">
                     </div>
+                    <div class="attr-element">
+                        <label>Tên tài khoản:</label>
+                        <input type="text" name="tendangnhap" placeholder="Nhập tên tài khoản">
+                    </div>
+                    <div class="attr-element">
+                        <label>Mật khẩu:</label>
+                        <input type="password" name="password1" placeholder="Nhập mật khẩu">
+                    </div>
+                    <div class="attr-element">
+                        <label>Nhập lại mật khẩu:</label>
+                        <input type="password" name="password2" placeholder="Nhập lại mật khẩu">
+                    </div>
                     <div class="considtion-readed">
                         <label class="container">
                             Tôi đã đọc và đồng ý với các <a id="condition">Điều kiện &amp; điều khoản</a>
@@ -122,7 +184,7 @@ else
                     </div>
                     <div class="btn-group row">
                         <div class="col-md-6">
-                            <input class="btn signup-btn" type="submit" name="ok" value="ĐĂNG KÍ"/>
+                            <input class="btn signup-btn" type="submit" name="ok" value="ĐĂNG KÍ" />
                         </div>
                         <div class="col-md-6">
                             <a href="./index.cshtml"><div class="btn cancel-btn">HỦY</div></a>

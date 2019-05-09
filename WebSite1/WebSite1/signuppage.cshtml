@@ -1,6 +1,8 @@
 ﻿@{
     Layout = "_Layout.cshtml";
     Page.Title = "Đăng ký - Giải thưởng cánh diều vàng";
+
+    var messageError = string.Empty;
 }
 
 <!--Style for element in page-->
@@ -21,6 +23,7 @@
     string password2 = Request.Form["password2"];
     string check = Request.Form["check"];
     string file = null;
+    string password = null;
 
     //check empty values
     if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(email)
@@ -36,18 +39,21 @@
             //check TenDangNhap and insert data
             var db = Database.Open("DefaultConnection");
 
-            var sql_check = "select * from Users where TenDangNhap = '" + tendangnhap + "'";
+            var sql_check = "select * from Users where TenDangNhap = @0";
 
-            var result = db.QuerySingle(sql_check);
+            var result = db.QuerySingle(sql_check, tendangnhap);
 
             if (result != null)
             {
                 // this username exist
-                Response.Write("tên tài khoản đã tồn tại");
+                messageError = "Tên tài khoản đã tồn tại, vui lòng nhập tên tài khoản khác!";
             }
             else
             {
                 // this username don't exist and can insert
+
+                //md5 password
+                password = FormsAuthentication.HashPasswordForStoringInConfigFile(password1, "MD5");
 
                 //check image file exist and upload file
                 if (Request.Files["file"] != null)
@@ -73,7 +79,7 @@
                             FileName = arrListStr[0];
                             //Response.Write(typeFile);
 
-                            //format file name 
+                            //format file name
                             DateTime day = DateTime.Now;
                             FileName = FileName + day + "." + typeFile;
                             FileName = FileName.Replace(" ", "_");
@@ -105,108 +111,112 @@
                 //insert data of new user
                 var sql = "insert into Users (TenNguoiDung, TenDangNhap, MatKhau, HinhAnhNguoiDung, NgaySinhNguoiDung, Email, SDT, FaceBook, Level) " +
                     "values (@0, @1, @2, @3, @4, @5, @6, @7, @8)";
-                db.Execute(sql, name, tendangnhap, password1, file, birthday, email, phonenumber, facebook, 1);
+                db.Execute(sql, name, tendangnhap, password, file, birthday, email, phonenumber, facebook, 1);
                 db.Close();
+
+                Response.Redirect("index.cshtml");
             }
         }
         else
         {
             //the password don't same
-            Response.Write("mật khẩu không khớp");
+            messageError = "Mật khẩu nhập lại không đúng, bạn vui lòng kiểm tra lại";
         }
     }
     else
     {
         //Not fully entered information
-        Response.Write("chưa nhập đầy đủ thông tin nha bạn trẻ");
+        messageError = "Bạn chưa nhập đầy đủ thông tin cần thiết, bạn vui lòng kiểm tra lại thông tin";
     }
 }
-else
+
+@if (!string.IsNullOrEmpty(messageError))
 {
-    <!--Begin page content-->
-    <section id="signup">
-        <div class="signup-content row">
-            <h3 class="title">Đăng ký tài khoản</h3>
-            <div class="left-form col-md-4">
-                <div class="signup-banner">
-                    <img src="~/Images/signup_banner.jpg">
-                </div>
-            </div>
-            <form class="row col-md-8" method="post" action="" runat="Server" enctype="multipart/form-data">
-                <div class="right-form">
-                    <div class="pick-avatar">
-                        <img id="frame" ondrop="drop(event)" ondragover="allowDrop(event)"></img>
-                        <input class="choose-img" type="file" accept="image/*" runat="Server" name="file" value="CHỌN ẢNH TỪ MÁY">
-                    </div>
-                    <div class="attr-element">
-                        <label>Họ tên:</label>
-                        <input type="text" name="name" placeholder="Nhập họ tên của bạn">
-                    </div>
-                    <div class="attr-element">
-                        <label>Ngày tháng năm sinh:</label>
-                        <div class='input-group date' id='datetimepicker1'>
-                            <input type='date' name="birthday" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="attr-element">
-                        <label>Địa chỉ email:</label>
-                        <input type="email" name="email" placeholder="Nhập địa chỉ email">
-                    </div>
-                    <div class="attr-element">
-                        <label>Số điện thoại:</label>
-                        <input type="text" name="phonenumber" placeholder="Nhập số điện thoại">
-                    </div>
-                    <div class="attr-element">
-                        <label>Địa chỉ facebook (nếu có):</label>
-                        <input type="text" name="facebook" placeholder="Nhập địa chỉ facebook">
-                    </div>
-                    <div class="attr-element">
-                        <label>Tên tài khoản:</label>
-                        <input type="text" name="tendangnhap" placeholder="Nhập tên tài khoản">
-                    </div>
-                    <div class="attr-element">
-                        <label>Mật khẩu:</label>
-                        <input type="password" name="password1" placeholder="Nhập mật khẩu">
-                    </div>
-                    <div class="attr-element">
-                        <label>Nhập lại mật khẩu:</label>
-                        <input type="password" name="password2" placeholder="Nhập lại mật khẩu">
-                    </div>
-                    <div class="considtion-readed">
-                        <label class="container">
-                            Tôi đã đọc và đồng ý với các <a id="condition">Điều kiện &amp; điều khoản</a>
-                            <input type="checkbox" name="check" checked="true">
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                    <div class="btn-group row">
-                        <div class="col-md-6">
-                            <input class="btn signup-btn" type="submit" name="ok" value="ĐĂNG KÍ" />
-                        </div>
-                        <div class="col-md-6">
-                            <a href="./index.cshtml"><div class="btn cancel-btn">HỦY</div></a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-    <div id="condition-popup" style="display:none">
-        <div class="popup-container">
-            <a><i class="close-condition-popup fa fa-close"></i></a>
-            <div class="content">
-                <div class="title">Điều kiện &amp; điều khoản</div>
-                <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora quibusdam repudiandae, distinctio aliquam fuga optio incidunt dignissimos natus amet porro!</div>
-                <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid exercitationem minus cumque veritatis nisi, error suscipit in qui neque architecto eveniet, corrupti doloribus, cum aspernatur similique. Facilis nisi tempora omnis ut esse quam, praesentium ratione iure eaque excepturi aperiam doloribus voluptatem suscipit laborum consequatur accusantium a, quasi, earum illum incidunt eum reprehenderit voluptas. Voluptatum, architecto tempora? Ab atque modi doloremque dignissimos fuga, explicabo eos alias? Laboriosam officiis et mollitia aspernatur ad voluptatum. Aut, molestias. Sunt alias amet deserunt vel impedit, voluptatibus aliquam animi, dolor necessitatibus repellat cum similique. Expedita maiores aut voluptate ad harum eligendi molestiae quasi et laudantium nam?</div>
-            </div>
-        </div>
-    </div>
-    <!--End page content-->
+    <div class="alert alert-danger">@messageError</div>
 }
 
+<!--Begin page content-->
+<section id="signup">
+    <div class="signup-content row">
+        <h3 class="title">Đăng ký tài khoản</h3>
+        <div class="left-form col-md-4">
+            <div class="signup-banner">
+                <img src="~/Images/signup_banner.jpg">
+            </div>
+        </div>
+        <form class="row col-md-8" method="post" action="" runat="Server" enctype="multipart/form-data">
+            <div class="right-form">
+                <div class="pick-avatar">
+                    <img id="frame" ondrop="drop(event)" ondragover="allowDrop(event)"></img>
+                    <input class="choose-img" type="file" accept="image/*" runat="Server" name="file" value="CHỌN ẢNH TỪ MÁY">
+                </div>
+                <div class="attr-element">
+                    <label>Họ tên:</label>
+                    <input type="text" name="name" placeholder="Nhập họ tên của bạn">
+                </div>
+                <div class="attr-element">
+                    <label>Ngày tháng năm sinh:</label>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='date' name="birthday" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="attr-element">
+                    <label>Địa chỉ email:</label>
+                    <input type="email" name="email" placeholder="Nhập địa chỉ email">
+                </div>
+                <div class="attr-element">
+                    <label>Số điện thoại:</label>
+                    <input type="text" name="phonenumber" placeholder="Nhập số điện thoại">
+                </div>
+                <div class="attr-element">
+                    <label>Địa chỉ facebook (nếu có):</label>
+                    <input type="text" name="facebook" placeholder="Nhập địa chỉ facebook">
+                </div>
+                <div class="attr-element">
+                    <label>Tên tài khoản:</label>
+                    <input type="text" name="tendangnhap" placeholder="Nhập tên tài khoản">
+                </div>
+                <div class="attr-element">
+                    <label>Mật khẩu:</label>
+                    <input type="password" name="password1" placeholder="Nhập mật khẩu">
+                </div>
+                <div class="attr-element">
+                    <label>Nhập lại mật khẩu:</label>
+                    <input type="password" name="password2" placeholder="Nhập lại mật khẩu">
+                </div>
+                <div class="considtion-readed">
+                    <label class="container">
+                        Tôi đã đọc và đồng ý với các <a id="condition">Điều kiện &amp; điều khoản</a>
+                        <input type="checkbox" name="check" checked="true">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="btn-group row">
+                    <div class="col-md-6">
+                        <input class="btn signup-btn" type="submit" name="ok" value="ĐĂNG KÍ" />
+                    </div>
+                    <div class="col-md-6">
+                        <a href="./index.cshtml"><div class="btn cancel-btn">HỦY</div></a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<div id="condition-popup" style="display:none">
+    <div class="popup-container">
+        <a><i class="close-condition-popup fa fa-close"></i></a>
+        <div class="content">
+            <div class="title">Điều kiện &amp; điều khoản</div>
+            <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora quibusdam repudiandae, distinctio aliquam fuga optio incidunt dignissimos natus amet porro!</div>
+            <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid exercitationem minus cumque veritatis nisi, error suscipit in qui neque architecto eveniet, corrupti doloribus, cum aspernatur similique. Facilis nisi tempora omnis ut esse quam, praesentium ratione iure eaque excepturi aperiam doloribus voluptatem suscipit laborum consequatur accusantium a, quasi, earum illum incidunt eum reprehenderit voluptas. Voluptatum, architecto tempora? Ab atque modi doloremque dignissimos fuga, explicabo eos alias? Laboriosam officiis et mollitia aspernatur ad voluptatum. Aut, molestias. Sunt alias amet deserunt vel impedit, voluptatibus aliquam animi, dolor necessitatibus repellat cum similique. Expedita maiores aut voluptate ad harum eligendi molestiae quasi et laudantium nam?</div>
+        </div>
+    </div>
+</div>
+<!--End page content-->
 
 <!--Script js for page-->
 @section scripts{

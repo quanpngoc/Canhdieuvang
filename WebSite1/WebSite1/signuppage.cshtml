@@ -56,7 +56,7 @@
                 password = FormsAuthentication.HashPasswordForStoringInConfigFile(password1, "MD5");
 
                 //check image file exist and upload file
-                if (Request.Files["file"] != null)
+                if (Request.Files["file"].ContentLength > 0)
                 {
                     //this file exist
                     HttpPostedFileBase MyFile = Request.Files["file"];
@@ -94,7 +94,14 @@
 
                             // get link of this file after upload file
                             file = "Images/Users/" + FileName;
-                            Response.Write(file);
+
+                            //insert data of new user
+                            var sql = "insert into Users (TenNguoiDung, TenDangNhap, MatKhau, HinhAnhNguoiDung, NgaySinhNguoiDung, Email, SDT, FaceBook, Level) " +
+                                "values (@0, @1, @2, @3, @4, @5, @6, @7, @8)";
+                            db.Execute(sql, name, tendangnhap, password, file, birthday, email, phonenumber, facebook, 1);
+                            db.Close();
+
+                            Response.Redirect("index.cshtml");
                         }
                     }
                     catch (Exception e)
@@ -105,16 +112,8 @@
                 else
                 {
                     //this file don't exist
-                    Response.Write("không có file");
+                    messageError = "Chưa lựa chọn ảnh đại diện";
                 }
-
-                //insert data of new user
-                var sql = "insert into Users (TenNguoiDung, TenDangNhap, MatKhau, HinhAnhNguoiDung, NgaySinhNguoiDung, Email, SDT, FaceBook, Level) " +
-                    "values (@0, @1, @2, @3, @4, @5, @6, @7, @8)";
-                db.Execute(sql, name, tendangnhap, password, file, birthday, email, phonenumber, facebook, 1);
-                db.Close();
-
-                Response.Redirect("index.cshtml");
             }
         }
         else

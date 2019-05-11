@@ -1,4 +1,42 @@
-﻿<!-- footer -->
+﻿@{ 
+    //validation input
+    Validation.RequireField("username", "Bạn chưa nhập tên tài khoản");
+    Validation.RequireField("password", "Bạn chưa nhập mật khẩu");
+    var messageError = string.Empty;
+
+    var username = "";
+    var password = "";
+
+    if (IsPost && Validation.IsValid())
+    {
+        username = Request.Form["username"];
+        password = Request.Form["password"];
+
+        password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
+
+        var db = Database.Open("DefaultConnection");
+        var sql = "SELECT * FROM Users where TenDangNhap = @0 and MatKhau = @1";
+        var result = db.QuerySingle(sql, username, password);
+
+        if (result != null)
+        {
+            Session.Add("MaNguoiDung", result.MaNguoiDung);
+            Session.Add("TenDangNhap", result.TenDangNhap);
+            Session.Add("HinhAnhNguoiDung", result.HinhAnhNguoiDung);
+            Session.Add("TenNguoiDung", result.TenNguoiDung);
+            Session.Add("Level", result.Level);
+            Session.Add("Email", result.Email);
+            Session.Add("SDT", result.SDT);
+            Session.Add("Level", result.FaceBook);
+        }
+        else
+        {
+            messageError = "Tên tài khoản hoặc mật khẩu sai, bạn vui lòng kiểm tra lại.";
+        }
+    }
+}
+
+<!-- footer -->
 <footer class="footer-distributed">
     <div class="footer-left">
         <div class="footer-logo">
@@ -48,16 +86,27 @@
     </div>
 </footer>
 <div id="login-popup">
+    @if (!string.IsNullOrEmpty(messageError))
+    {
+        <div class="alert alert-danger">@messageError</div>
+    }
+    @if (!Validation.IsValid())
+    {
+        <div class="alert alert-danger">@Html.ValidationSummary()</div>
+    }
     <i class="fa fa-close close-login-popup"></i>
     <div class="popup-content">
         <h3 class="title">Đăng nhập</h3>
-        <form>
-            <input type="text" value="" placeholder="Nhập tên tài khoản">
-            <input type="password" value="" placeholder="Nhập mật khẩu">
+        <form method="post" action="">
+            <input type="text" name="username" value="" placeholder="Nhập tên tài khoản">
+            <input type="password" name="password" value="" placeholder="Nhập mật khẩu">
+
+            <input type="submit" id="login-btn" class="btn-view-more btn" name="ok" value="ĐĂNG NHẬP" />
         </form>
-        <a class="col-md-12">
-            <div id="login-btn" class="btn-view-more btn">ĐĂNG NHẬP</div>
-        </a>
+        @*<a class="col-md-12">
+                <div id="login-btn" class="btn-view-more btn">ĐĂNG NHẬP</div>
+                <input type="submit" id="login-btn" class="btn-view-more btn" name="ok" value="ĐĂNG NHẬP" />
+            </a>*@
         <p><a>Quên mật khẩu</a></p>
         <p>Nếu bạn chưa có tài khoản, hãy <a href="./signuppage.cshtml">đăng ký</a> ngay</p>
         <div class="mid-block">

@@ -3,9 +3,120 @@
     Page.Title = "Tin tức - Giải thưởng cánh diều vàng";
 }
 
+@{
+    var db = Database.Open("DefaultConnection");
+
+    if (db == null)
+    {
+        <script>alert('Kiểm tra nối đến DB của bạn!');</script>
+    }
+
+    var newID = Request["newID"];
+
+    if (newID == null)
+    {
+        <script>alert('Không tìm thấy tin tức bạn muốn tìm!');</script>
+    }
+
+    var newInfo = db.Query("SELECT * FROM TinTuc WHERE MaTinTuc = '" + newID + "'").ElementAt(0);
+    var newsList = db.Query("SELECT TOP 3 MaTinTuc, TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc WHERE MaTinTuc <> '"+ newID +"' ORDER BY NgayDang desc");
+
+    db.Close();
+}
+
+@functions{
+
+    public void splitDateTime(string datetime, string[] Date, string[] Time)
+    {
+        Date = datetime.Split('-');
+        Time = Date[2].Split(' ');
+        Date[2] = Time[0];
+    }
+
+    public string changeMonthToString(string month)
+    {
+        string txtMonth = "";
+        switch (month)
+        {
+            case "01":
+                txtMonth = "JAN";
+                break;
+            case "02":
+                txtMonth = "FEB";
+                break;
+            case "03":
+                txtMonth = "MAR";
+                break;
+            case "04":
+                txtMonth = "APR";
+                break;
+            case "05":
+                txtMonth = "MAY";
+                break;
+            case "06":
+                txtMonth = "JUL";
+                break;
+            case "07":
+                txtMonth = "JUN";
+                break;
+            case "08":
+                txtMonth = "AUG";
+                break;
+            case "09":
+                txtMonth = "SEP";
+                break;
+            case "10":
+                txtMonth = "OCT";
+                break;
+            case "11":
+                txtMonth = "NOV";
+                break;
+            case "12":
+                txtMonth = "DEC";
+                break;
+        }
+
+        return txtMonth;
+    }
+}
+
 <!--Style for element in page-->
 @section styles {
     <link rel="stylesheet" href="~/Content/css/news.css" />
+}
+
+<!--Script js for page-->
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $(window).scroll(function(){
+            if($(window).width()>768){
+                var bottomNav = $('.nav').offset().top + $('.nav').outerHeight();
+                var topFooter = $('.footer-distributed').offset().top;
+                var scrollPosTop = $(this).scrollTop();
+                var newRelatedHeight = $('#news .fuil-container .news-related').outerHeight()
+                var scrollPosBottom = $(this).scrollTop() + newRelatedHeight;
+            
+                if(bottomNav+54<scrollPosTop && scrollPosBottom<topFooter-46){
+                    $('#news .fuil-container .news-related').addClass('news-related-fix');
+                    $('#news .fuil-container .news-related').offset({top: scrollPosTop+10});
+                }else if(bottomNav+54>=scrollPosTop){
+                    $('#news .fuil-container .news-related').removeClass('news-related-fix');
+                    $('#news .fuil-container .news-related').offset({top: bottomNav+54});
+                }else if(scrollPosBottom>=topFooter-42){
+                    $('#news .fuil-container .news-related').removeClass('news-related-fix');
+                    $('#news .fuil-container .news-related').offset({top: topFooter-46-newRelatedHeight});
+                }
+            }
+        });
+
+        $('#news .news-related .new-tag').each(function () {
+            var index = $(this).attr('data-index');
+            var imgURL = $('#' + index).attr('src');
+            $(this).css('background-image', 'linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("' + imgURL + '")');
+        });
+    });
+    </script>
 }
 
 <!--Begin page content-->
@@ -13,17 +124,22 @@
     <div class="fuil-container row">
         <div class="new-content col-md-8">
             <div class="new-img">
-                <img src="~/Images/banner1.jpg">
+                <img src="@newInfo.LinkAnhBia">
             </div>
             <hr class="new-line">
             <div class="content">
                 <div class="contact">
                     <div class="post-date">
-                        <p>23</p>
-                        <p>DEC</p>
-                        <p>2018</p>
+                        @{
+                            string[] Date = new string[3];
+                            string[] Time = new string[2];
+                            splitDateTime(@newInfo.NgayDang, Date, Time);
+                        }
+                        <p>@Date[0]</p>
+                        <p>@changeMonthToString(Date[1])</p>
+                        <p>@Date[2]</p>
                         <hr>
-                        <p>12:19 pm</p>
+                        <p>@Time[1]</p>
                     </div>
                     <div class="share">
                         <i class="fa fa-facebook"></i>
@@ -33,128 +149,61 @@
                 </div>
                 <div class="text">
                     <div class="">
-                        <h3 class="title">Nhìn lại Cánh diều vàng 2017</h3>
-                        <p class="author">Tú Anh</p>
+                        <h3 class="title">@newInfo.TieuDe</h3>
+                        <p class="author">@newInfo.NguoiDang</p>
                     </div>
                     <hr>
-                    <div class="main-text">
-                        <p>Giải thưởng Cánh diều vàng năm nay được đánh giá đã có sự đổi mới phù hợp với thực tế điện ảnh Việt.</p>
-                        <img src="~/Images/news/0.jpg">
-                        <p>Theo nhận xét của giới chuyên môn, điện ảnh Việt Nam như đang được trẻ hóa. Nhiều bộ phim mang tính giải trí cao nhưng không còn là hài nhảm, 1/3 trong số các phim tham dự đều có chất lượng tốt và khá đồng đều. Những cái tên như Em chưa 18, Cô Ba Sài Gòn, Cô gái đến từ hôm qua… đều đạt kỷ lục doanh thu phòng vé trong thời gian vừa qua.</p>
-                        <p>Bộ phim điện ảnh Cô Ba Sài Gòn với đề tài thời trang mang yếu tố xuyên không kỳ ảo của đạo diễn Trần Bửu Lộc và Kay Nguyễn đã đạt giải Cánh diều vàng cho hạng mục phim xuất sắc nhất và giải cá nhân cho biên kịch xuất sắc nhất. Tuy bị nhận xét là có một vài hạt sạn về tâm lý nhân vật và logic thời gian, nhưng Cô Ba Sài Gòn được xem như một bộ phim có chất lượng đồng đều nhất về biên kịch, sản xuất. Đặc biệt khâu thiết kế phục trang cho phim là một điểm sáng.</p>
-                        <img src="~/Images/news/1.jpg">
-                        <p>Dành tặng những lời có cánh cho Cô Ba Sài Gòn, đạo diễn Lê Thanh Sơn, người dành giải ở hạng mục đạo diễn xuất sắc nhất cho phim Em chưa 18 nhận xét rằng:“Theo tinh thần tôn vinh dân tộc và quảng bá cho tà áo dài Việt Nam thì Cô Ba Sài Gòn hoàn toàn xứng đáng. Mình rất mừng cho bộ phim đó vì Em chưa 18 là một bộ phim cận đại khác không đúng ngạch này thì rất may mắn Việt Nam mình có nhiều sân chơi, giải để nhiều bộ phim có những điểm rơi được tôn vinh đúng hơn”</p>
-                        <p>Trong số các giải thưởng, không thể không kể đến những bộ phim thuộc dòng nghệ thuật kén người xem. Đảo của dân ngụ cư vinh dự giành giải ở hạng mục quay phim xuất sắc nhất (quay phim Lý Thái Dũng) và diễn viên phụ xuất sắc nhất (diễn viên Nhan Phúc Vinh – vai Miên).</p>
-                        <img src="~/Images/news/2.jpg">
-                        <p>Ở hạng mục phim truyền hình, bộ phim Thương nhớ ở ai giành được 4 giải thưởng: giải thưởng phim truyền hình xuất sắc nhất, đạo diễn xuất sắc nhất (đạo diễn Lưu Trọng Ninh, Bùi Thọ Thịnh), quay phim xuất sắc phim truyền hình (NSƯT Hoàng Tích Thiện) và nam diễn viên phụ xuất sắc phim truyền hình (Jimmy Khánh – vai Đột) . Lấy đề tài nông thôn, gần đây dường như đã bị lãng quên trong điện ảnh Việt, Thương nhớ ở ai được đầu tư kỹ lưỡng và chỉn chu về mặt dàn diễn viên, phục trang, bối cảnh.</p>
-                        <p>Đạo diễn Lưu Trọng Ninh tâm sự: “Lần đầu tiên tôi đạt được giải về truyền hình, cũng có một cảm xúc mới mẻ với mình. Có lần tôi đã nói rằng, điện ảnh là một tòa lâu đài nhưng không dễ ai bước vào, truyền hình như đường phố và mọi người đều có thể dễ dàng đến với nó. Và thực sự người nghệ sĩ cần phải đến với đường phố, tôi nghĩ Thương nhớ ở ai sẽ có hàng triệu người xem. Đến bây giờ có nhiều người vẫn hỏi để xem lại bộ phim này. Và tôi rất hạnh phúc vì điều đó.”</p>
-                        <p>Nếu giải thưởng phim truyện điện ảnh phần lớn thuộc các bộ phim thuộc hãng phim tư nhân thì, đối với dòng phim tài liệu, các giải thưởng thuộc về các hãng phim Nhà nước. Đạt giải Cánh diều vàng, phim tài liệu Ngày về của đạo diễn Phạm Thanh Hùng, điện ảnh Quân đội Nhân dân như tấm lòng tri ân đến những người thương bệnh binh, đã bỏ lại một phần xương máu của mình tại chiến trường để đất nước có một “ngày về” với hòa bình.</p>
-                        <img src="~/Images/news/3.jpg">
-                        <p>Đạo diễn Phạm Thanh Hùng tâm sự: “Khi nhận được giải thưởng Cánh diều vàng này tôi và các thành viên trong đoàn làm phim rất vui, vui vì nhận được sự ghi nhận công sức của một tập thể điện ảnh quân đội và sự nỗ lực, cố gắng của một ekip làm phim. Tôi muốn gửi lời chúc sức khỏe tới các bác thương bệnh binh đang làm việc tại trung tâm và lời cảm ơn chân thành tới tập thể y bác sĩ, điều dưỡng tại hai trung tâm điều dưỡng thương binh nặng Thuận Thành và Nho Quan đã tạo điều kiện tốt cho đoàn làm phim thực hiện tốt nhiệm vụ của mình”</p>
-                        <img src="~/Images/news/4.jpg">
-                        <p>Nhắc đến đóng góp cho nền điện ảnh Việt Nam không thể không nhắc đến những công trình nghiên cứu lý luận, phê bình điện ảnh. Giải cánh diều Vàng năm nay cho Giáo trình Đại học Phim tài liệu cho Giáo sư, Tiến sĩ Trần Thanh Hiệp. Phát biểu tại lễ trao giải, nhà báo Đinh Trọng Tuấn đã bày tỏ “Trong thời buổi kinh tế thị trường, mọi thứ đều diễn ra  khi đó có những người vẫn âm thầm xem phim, âm thầm nghiên cứu và âm thầm viết lý luận phê bình và có những đóng góp âm thầm cho điện ảnh Việt Nam. Tôi luôn vô cùng kính trọng những con người đó”.</p>
-                        <p>Điểm mới đáng chú ý năm nay của Cánh diều vàng là sự tham dự của nhiều bộ phim re-make (phim chuyển thể từ kịch bản nước ngoài). Tuy không được trao giải cho phim nhưng nhiều nghệ sĩ diễn viên đóng góp được xem xét trao giải. Những cái tên như “Yêu đi đừng sợ”, “Sắc đẹp ngàn cân” hay “Người phán xử” đều là những bộ phim chiếm được nhiều tình cảm của khán giả trong thời gian qua. Hội đồng nghệ thuật bày tỏ rằng đã đến lúc cần đánh giá kỹ càng hơn đối với những bộ phim Việt hóa có sáng tạo.</p>
+                    @*<div class="main-text">
+                        <script type="text/javascript">
+                            $('document').ready(function () {
+                                $('.main-text').html('@newInfo.NoiDungTT');
+                            })
+                        </script>
+                    </div>*@
+                    @if (newInfo.noidungtt != null && newInfo.NoiDungTT != "")
+                    {
+                    <div class="main-text">@{
+                        StringWriter stringWriter = new StringWriter();
+                        HtmlTextWriter writer = new HtmlTextWriter(stringWriter);
+                        writer.WriteLine(newInfo.NoiDungTT);
+                        }
                     </div>
+                    }
+                    else
+                    {
+                        <div class="main-text">@newInfo.GioiThieuTT</div>
+                    }
                 </div>
-            </div>
+                </div>
         </div>
-        <div class="new-content col-md-8">
-            <div class="new-img">
-                <img src="~/Images/banner3.jpg">
-            </div>
-            <hr class="new-line">
-            <div class="content">
-                <div class="contact">
-                    <div class="post-date">
-                        <p>23</p>
-                        <p>DEC</p>
-                        <p>2018</p>
-                        <hr>
-                        <p>12:19 pm</p>
-                    </div>
-                    <div class="share">
-                        <i class="fa fa-facebook"></i>
-                        <i class="fa fa-twitter"></i>
-                        <i class="fa fa-google-plus"></i>
-                    </div>
-                </div>
-                <div class="text">
-                    <div class="">
-                        <h3 class="title">Cánh diều vàng 2017: Điện ảnh Việt Nam như đang trẻ lại</h3>
-                        <p class="author">Báo lao động</p>
-                    </div>
-                    <hr>
-                    <div class="main-text">
-                        <p>Lễ trao giải thưởng điện ảnh Cánh diều vàng 2017 20h tối 15.4 do Hội Điện ảnh Việt Nam tổ chức diễn ra tại Nhà hát Lớn, Hà Nội.</p>
-                        <p>NSND Đặng Nhật Minh, đạo diễn của những bộ phim nổi tiếng như "Bao giờ cho đến Tháng Mười", "Đừng đốt" cho rằng, điện ảnh Việt Nam như đang trẻ lại.</p>
-                        <p>Theo ông, các phim giải trí năm nay tốt hơn những năm trước, không có phim hài nhảm. Tuy nhiên, tính giải trí chỉ dành cho khán giả trẻ chứ không phải dành cho khán giả phổ thông.</p>
-                        <img src="~/Images/news/1-0.jpg">
-                        <p>NSND Hoàng Dũng, vai ông trùm Phan Quân trong bộ phim truyền hình "Người phán xử" chia sẻ cảm xúc khi bộ phim không được xét trao giải Cánh diều vàng, Cánh diều bạc và Bằng khen vì làm lại từ kịch bản nước ngoài: "Tôi thấy không có gì phải tiếc nuối vì giải thưởng lớn nhất là sự đón nhận của khán giả thì bộ phim đã được rồi".</p>
-                        <img src="~/Images/news/1-1.jpg">
-                        <p>Đánh giá trước thềm Lễ trao giải, bà Nguyễn Thị Hồng Ngát - Phó Chủ tịch Thường trực Hội Điện ảnh Việt Nam cho biết, trong số 13 phim điện ảnh tranh giải Cánh diều năm nay, bà có cảm tình nhất với các bộ phim "Em chưa 18" và "Cô gái đến từ hôm qua".</p>
-                        <img src="~/Images/news/1-2.jpg">
-                        <p>Đạo diễn Hồng Ngát cho hay, năm nay, có nhiều phim giàu tính giải trí nhưng vẫn thành công về mặt nghệ thuật như "Em chưa 18". Điều đó chứng tỏ các nhà sản xuất vừa phải đón đầu thị trường vừa vẫn đảm bảo yếu tố nghệ thuật.</p>
-                        <p>Theo Phó chủ tịch Hội Điện ảnh Việt Nam, năm nay, tiêu chí chấm phim bao gồm tính sáng tạo, tính nghệ thuật, độ ảnh hưởng, tính dân tộc.</p>
-                        <p>"Các phim năm nay khẳng định phim Việt hoàn toàn có thể chống đỡ trước làn sóng "ngoại lai" của phim nước ngoài", bà cho biết.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="news-related col-md-4 col-xs-12">
             <h3 class="news-related-title">Các tin liên quan:</h3>
-            <div class="new-tag">
-                <a>
-                    <div class="new-tag-img col-md-5 col-xs-12">
-                        <img src="~/Images/banner2.jpg">
-                    </div>
-                    <div class="new-tag-content col-md-7 col-xs-12">
-                        <h3 class="new-tag-title">Cánh diều vàng 2017 đã có chủ</h3>
-                        <p class="sumary">
-                            Phim truyện xuất sắc:
-                            <br>
-                            Cánh diều vàng: Sài Gòn anh yêu em
-                            <br>
-                            Cánh diều bạc: 12 chòm sao: Vẽ đường cho yêu chạy và Tấm Cám: Chuyện chưa kể
-                            <br>
-                            Bằng khen: Cha cõng con, Sút và Bao giờ có yêu nhau
-                            <br>
-                            Bằng khen của BGK: Tik Tak anh yêu em
-                            <br>...
-                        </p>
-                    </div>
-                </a>
-            </div>
-            <div class="new-tag">
-                <a>
-                    <div class="new-tag-img col-md-5">
-                        <img src="~/Images/banner4.jpg">
-                    </div>
-                    <div class="new-tag-content col-md-7">
-                        <h3 class="new-tag-title">Trương Ngọc Ánh được sắp xếp trao giải cho Trần Bảo Sơn</h3>
-                        <p class="sumary">Đêm 8/1, tại Nhà hát TP. HCM, giải thưởng “Ngôi sao xanh” đã vinh danh Trần Bảo Sơn cùng nhiều nghệ sỹ khác trong ngành công nghiệp điện ảnh và truyền hình tại Việt Nam. Trương Ngọc Ánh đã xướng tên chồng cũ trong hạng mục danh giá: Nam diễn viên điện ảnh xuất sắc nhất.</p>
+            @for (int c1 = 0; c1 < newsList.Count(); c1++)
+            {
+                <a href="./newspage.cshtml?newID=@newsList.ElementAt(c1).MaTinTuc">
+                    <div class="new-tag" data-index="img-@c1">
+                    
+                        <div class="new-tag-img">
+                            <img id="img-@c1" src="@newsList.ElementAt(c1).LinkAnhBia">
+                        </div>
+                        <div class="col-md-5 col-xs-12"></div>
+                        <div class="new-tag-content col-md-7 col-xs-12">
+                            <h3 class="new-tag-title">@newsList.ElementAt(c1).TieuDe</h3>
+                            <p class="sumary">
+                                @{string[] content = @newsList.ElementAt(c1).GioiThieuTT.Split(';');}
+                                @foreach (var str in content)
+                                {
+                                    @str
+                                    <br>            
+                                }
+                            </p>
+                        </div>
+                    
                     </div>
                 </a>
-            </div>
-            <div class="new-tag">
-                <a>
-                    <div class="new-tag-img col-md-5 col-xs-12">
-                        <img src="~/Images/banner5.jpg">
-                    </div>
-                    <div class="new-tag-content col-md-7 col-xs-12">
-                        <h3 class="new-tag-title">Kim Tuyến bất ngờ nhận giải Cánh diều vàng</h3>
-                        <p class="sumary">
-                            Tại Lễ trao giải Cánh diểu vàng 2015 diễn ra tại Hà Nội đêm 20/4,DVDA Kim Tuyến đã bất ngờ nhận được giải thưởng Nữ diễn viên phụ xuất sắc nhật với bộ phim Tuổi Thanh Xuân.
-                            <br>Tham gian trong Lễ trao giải,Kim Tuyến đã chọn chiếc đầm mằ trắng nhẹ nhàng và tinh khiết với kiểu dáng trẻ trung,sang trọng của NTK Chung Thanh Phong.
-                        </p>
-                    </div>
-                </a>
-            </div>
+            }
         </div>
     </div>
 </section>
 <!--End page content-->
-
-<!--Script js for page-->
-@section scripts{
-    <script type="text/javascript" src="~/Scripts/js/new.js"></script>
-}

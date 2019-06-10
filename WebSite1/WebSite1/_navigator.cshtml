@@ -1,4 +1,15 @@
-﻿<nav class="navbar navbar-inverse">
+﻿@{ 
+    string accountImgUrl="";
+    if (Session["accountImgUrl"] != "" && Session["accountImgUrl"] != null)
+    {
+        accountImgUrl = Session["accountImgUrl"].ToString();
+    }
+    else
+    {
+        accountImgUrl = "Images/user-black.png";
+    }
+}
+<nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -12,14 +23,45 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="./index.cshtml">TRANG CHỦ</a></li>
-                <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
-                <li><a href="~/listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
-                <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                @{
+                    switch (Page.index)
+                    {
+                        case 0:
+                            <li class="active"><a href="./index.cshtml">TRANG CHỦ</a></li>
+                            <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
+                            <li><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
+                            <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                        break;
+                        case 1:
+                            <li><a href="./index.cshtml">TRANG CHỦ</a></li>
+                            <li class="active"><a href="./historypage.cshtml">LỊCH SỬ</a></li>
+                            <li><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
+                            <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                        break;
+                        case 2:
+                            <li><a href="./index.cshtml">TRANG CHỦ</a></li>
+                            <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
+                            <li class="active"><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
+                            <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                        break;
+                        case 3:
+                            <li><a href="./index.cshtml">TRANG CHỦ</a></li>
+                            <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
+                            <li><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
+                            <li class="active"><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                        break;
+                        default:
+                            <li><a href="./index.cshtml">TRANG CHỦ</a></li>
+                            <li><a href="./historypage.cshtml">LỊCH SỬ</a></li>
+                            <li><a href="./listfilmpage.cshtml">BẢNG XẾP HẠNG</a></li>
+                            <li><a href="./index.cshtml#contact-us">LIÊN HỆ</a></li>
+                        break;
+                    }
+                }
             </ul>
         </div>
         <div class="user-avatar">
-            <a><img src="~/Images/user-black.png"></a>
+            <a><img src="@accountImgUrl"></a>
         </div>
     </div>
 </nav>

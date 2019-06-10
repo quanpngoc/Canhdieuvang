@@ -1,360 +1,387 @@
 ﻿@{
     Layout = "_Layout.cshtml";
     Page.Title = "Trang chủ - Giải thưởng cánh diều vàng";
+    Page.Index = 0;
 }
 
 @{
     var db = Database.Open("DefaultConnection");
 
+
     //Lấy data banner tin tức giải
-    var newsList = db.Query("SELECT TOP 4 TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc order by NgayDang desc");
+    var newsList = db.Query("SELECT TOP 4 MaTinTuc, TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc order by NgayDang desc");
 
     //Lấy data các phim đạt giải theo từng thể loại giải (cánh diều vàng, cánh diều bạc)
-    var goldFilmAwardList = db.Query("SELECT * FROM Phim, GiaiThuongPhim WHERE Phim.MaPhim = GiaiThuongPhim.MaPhim AND Nam='2018' AND TenGiaiThuongPhim=N'Cánh diều vàng'");
-    var silverFilmAwardList = db.Query("SELECT * FROM Phim, GiaiThuongPhim WHERE Phim.MaPhim = GiaiThuongPhim.MaPhim AND Nam='2018' AND TenGiaiThuongPhim=N'Cánh diều bạc'");
+    int lastestYear_FilmAward = Convert.ToInt16(db.Query("SELECT MAX(Nam) FROM GiaiThuongPhim").ElementAt(0)[0]);
+    int lastestYear_ActorAward = Convert.ToInt16(db.Query("SELECT MAX(Nam) FROM GiaiThuongPhim").ElementAt(0)[0]);
+
+    var filmAwardList = db.Query("SELECT TOP 4 * FROM Phim, GiaiThuongPhim, LoaiPhim, HinhAnhPhim WHERE Phim.MaPhim = GiaiThuongPhim.MaPhim AND Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim " +
+        "AND HinhAnhPhim.MaPhim = Phim.MaPhim AND HinhAnhPhim.MaHinhAnhPhim = Phim.MaHinhAnhPhim " +
+        "AND Nam=" + lastestYear_FilmAward + " AND (TenGiaiThuongPhim=N'Cánh diều vàng' OR TenGiaiThuongPhim=N'Cánh diều bạc')");
 
     //Lấy data các diễn viên đạt giải trong năm
-    var actorList = db.Query("SELECT TOP 4 * FROM DienVien, GiaiThuongDienVien WHERE DienVien.MaDV = GiaiThuongDienVien.MaDV AND Nam = '2018' order by DienVien.MaDV asc");
-}
+    var actorList = db.Query("SELECT TOP 4 * FROM DienVien, GiaiThuongDienVien WHERE DienVien.MaDV = GiaiThuongDienVien.MaDV AND Nam = " + lastestYear_ActorAward + " order by DienVien.MaDV asc");
 
-<!--Begin page content-->
-<section id="kv">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            @for (int c1 = 0; c1 < newsList.Count(); c1++) {
-                <div class="swiper-slide">
-                    <div id="banner@(c1 + 1) " class="banner">
-                        <div class="banner-img">
-                            <img src="@newsList.ElementAt(c1).LinkAnhBia" />
-                        </div>
-                        <div class="info-content animation">
-                            <div class="black-background"></div>
-                            <div class="top-block">
-                                <h3 class="title">@newsList.ElementAt(c1).TieuDe</h3>
-                                <p class="text">
-                                    @{string[] content = @newsList.ElementAt(c1).GioiThieuTT.Split(';');}
-                                    @foreach (var str in content)
-                                    {
-                                        @str
-                                        <br>
-                                        @*if (Array.IndexOf(content,str) < content.Count() - 1)
-                                        {
-                                            <br>
-                                        }*@
-                                    }
-                                </p>
-                            </div>
-                            <div class="bottom-block">
-                                <a href="./newspage.cshtml">
-                                    <div class="btn-view-more btn">XEM THÊM</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-             }
-        </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </div>
-</section>
-<section id="history">
-    <div class="info-content">
-        <h3 class="title">Lịch sử giải thưởng cánh diều vàng</h3>
-        <p class="text">
-            Giải thưởng Hội điện ảnh Việt Nam, có tên gọi là Cánh Diều Vàng (tiếng Anh: Golden Kites Awards) là một giải thưởng điện ảnh hàng năm của Hội Điện ảnh Việt Nam.
-            Giải thưởng được trao vào khoảng tháng ba, cho những tác phẩm điện ảnh sản xuất trong năm trước đó. Giải được tổ chức lần đầu tiên là Cánh diều vàng 2002, diễn ra vào đầu 2003.
-            Trong các hạng mục trao giải còn có Cánh diều bạc và Cánh diều đồng, tuy có những năm bị loại bỏ. Mặc dù là giải thưởng điện ảnh, Cách diều vàng còn trao cho cả các tác phẩm truyền hình và phim video.
-        </p>
-        <p class="text">
-            Thực chất Cánh diều vàng là một giải thưởng mang tính nội bộ nằm trong hệ thống giải thưởng chung của Hội Liên hiệp văn học nghệ thuật.
-            Hội Liên hiệp văn học nghệ thuật gồm có bảy hội: văn học, âm nhạc, sân khấu, mỹ thuật, nhiếp ảnh, kiến trúc, điện ảnh.
-            Nhằm khuyến khích các nghệ sĩ thông qua tác phẩm, hàng năm Chính phủ cấp kinh phí cho mỗi hội để trao giải thưởng.
-            Giải của Hội Điện ảnh bắt đầu trao từ năm 1993.
-        </p>
-        <p class="text">
-            Năm 2003, Hội Điện ảnh Việt Nam đặt tên cho giải của mình là Cánh diều vàng, và kết hợp cùng Đài Truyền hình Việt Nam đưa
-            buổi lễ trao giải lên sóng truyền hình trực tiếp với sự hỗ trợ của các doanh nghiệp thông qua quảng cáo.
-            Qua lịch sử của giải thưởng, nhiều hạng mục của giải được thay đổi. Ở giải Cánh diều vàng 2005, Cánh diều bạc và Cánh diều đồng bị bỏ bớt.
-            Đến giải 2006, Cánh diều bạc được khôi phục và bằng khen thay cho Cánh diều đồng. Năm 2007, Hội Điện ảnh trao tặng thêm Cách diều bạc và hai giải phụ là
-            Giải phim phục vụ khán giả đông nhất và Giải phim bán được nhiều vé nhất....
-        </p>
-        <div class="row">
-            <a href="~/historypage.cshtml">
-                <div class="btn-view-more btn">XEM THÊM</div>
-            </a>
-        </div>
-    </div>
-    <div class="history-img">
-        <img src="~/Images/histoty-1.png">
-    </div>
-</section>
-<section id="film-awarded">
-    <h3 class="title">Thông tin các tác phẩm điện ảnh đạt giải</h3>
-    <div class="panel-controller">
-        <div class="panel-controller-element col-lg-3 col-md-3 col-sm-8 col-xs-12" data-index="film-1">
-            <div class="content">
-                <div class="img">
-                    <img src="~/Images/cbsg-logo.png">
-                </div>
-                <div class="award-archieve row">
-                    <div class="award-img col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <img src="~/Images/film-award-logo-1.png">
-                    </div>
-                    <div class="gold-award award-name col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                        <div class="award">Cánh Diều Vàng</div>
-                        <div class="category">Phim chiếu rạp</div>
-                        <p>-----</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-controller-element col-lg-3 col-md-3 col-sm-8 col-xs-12" data-index="film-2">
-            <div class="content">
-                <div class="img">
-                    <img src="~/Images/ec18-logo.png">
-                </div>
-                <div class="award-archieve row">
-                    <div class="award-img col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <img src="~/Images/film-award-logo-2.png">
-                    </div>
-                    <div class="silver-award award-name col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                        <div class="award">Cánh Diều Bạc</div>
-                        <div class="category">Phim chiếu rạp</div>
-                        <p>-----</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-controller-element col-lg-3 col-md-3 col-sm-8 col-xs-12" data-index="film-3">
-            <div class="content">
-                <div class="img">
-                    <img src="~/Images/tnoa-logo.png">
-                </div>
-                <div class="award-archieve row">
-                    <div class="award-img col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <img src="~/Images/film-award-logo-1.png">
-                    </div>
-                    <div class="gold-award award-name col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                        <div class="award">Cánh Diều Vàng</div>
-                        <div class="category">Phim truyền hình</div>
-                        <p>-----</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-controller-element col-lg-3 col-md-3 col-sm-8 col-xs-12" data-index="film-4">
-            <div class="content">
-                <div class="img">
-                    <img src="~/Images/lydvs-logo.png">
-                </div>
-                <div class="award-archieve row">
-                    <div class="award-img col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <img src="~/Images/film-award-logo-2.png">
-                    </div>
-                    <div class="silver-award award-name col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                        <div class="award">Cánh Diều Bạc</div>
-                        <div class="category">Phim truyền hình</div>
-                        <p>-----</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="panel-content">
-        @{
-            var i = 1;
-            foreach (var award in goldFilmAwardList)
+    IEnumerable<dynamic> userInfo = null;
+    if (Session["UserID"] != "")
+    {
+        userInfo = db.Query("SELECT * FROM Users WHERE MaNguoiDung = '" + Session["UserID"] + "'");
+    }
+
+    //Thực thi phương thức post
+    string action = "";
+    int result_sendEmail = 0;
+    if (IsPost)
+    {
+        action = Request.Form["action"];
+        if (action == "sendEmail")
+        {
+            result_sendEmail = onPost(userInfo);
+        }
+    }
+
+    //Đưa ra thông báo khi gửi email
+    <script type="text/javascript">
+        if ("@result_sendEmail.ToString()" == "1")
+        setTimeout(function () {
+        alert("Chưa gửi được email, xin kiểm tra lại thông tin!");
+    }, 5000);
+        else if ("@result_sendEmail.ToString()" == "2") {
+        setTimeout(function () {
+            alert("Đã gửi email thành công!");
+        }, 5000);
+    }
+            </script>
+
+            db.Close();
+        }
+
+        @functions{
+            public string customerName { get; set; }
+            public string customerEmail { get; set; }
+            public string emailTitle { get; set; }
+            public string customerRequest { get; set; }
+            public string emailPassword { get; set; }
+
+            public int onPost(IEnumerable<dynamic> userInfo)
             {
-                <div id="film-@i" class="film hidden">
-                    <div class="content">
+                customerName = Request.Form["customerName"];
+                customerEmail = Request.Form["customerEmail"];
+                emailTitle = Request.Form["emailTitle"];
+                customerRequest = Request.Form["customerRequest"];
+                emailPassword = Request.Form["emailPassword"];
 
-                        <h3 class="title">@award.TenPhim</h3>
-                        <p class="award">*---@award.TenGiaiThuongPhim - @award.TheLoai---*</p>
-                        @{string[] intro = award.GioiThieuPhim.Split(';');}
-                        @foreach (var str in intro)
-                        {<p class="text">@str</p>}
-
-                        <p class="text">Nội dung:</p>
-                        @{string[] content = award.NoiDungPhim.Split(';');}
-                        @foreach (var str in content)
-                        {<p class="text">@str</p>}
-                    </div>
-                    <div class="trailer col-md-8">
-                        <iframe width="560" height="315" src="@award.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="more-info col-md-4">
-                        <div class="top">
-                            <p class="text">Đạo diễn: @award.DaoDien</p>
-                            <p class="text">Nhà sản xuất: @award.Nhasanxuat</p>
-                            <p class="text">Diễn viên: @award.DienVien</p>
-                            @if (@award.TheLoai == "Phim chiếu rạp")
-                            {
-                                <p class="text">Doanh thu: @award.GhiChu</p>
-                            }
-                            else
-                            {
-                                <p class="text">Phát sóng tại: @award.GhiChu</p>
-                            }
-                        </div>
-                        <div class="bottom">
-                            <a href="./filmpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                i = i + 2;
+                if(customerName!="" && customerEmail != "" && emailTitle!="" && customerRequest!="" && emailPassword != "")
+                {
+                     if (sendEmail(userInfo))
+                     {
+                        return 2;
+                     }
+                }
+                return 1;
             }
 
-            i=2;
-            foreach (var award in silverFilmAwardList)
+            public bool sendEmail(IEnumerable<dynamic> userInfo)
             {
-                <div id="film-@i" class="film hidden">
-                    <div class="content">
+                try
+                {
+                    //Googlemail - Gmail SMTP Server (Outgoing Messages)
+                    WebMail.SmtpServer = "smtp.gmail.com";
+                    //WebMail.SmtpPort = 587;
+                    WebMail.SmtpPort = 25;
+                    WebMail.EnableSsl = true;
 
-                        <h3 class="title">@award.TenPhim</h3>
-                        <p class="award">*---@award.TenGiaiThuongPhim - @award.TheLoai---*</p>
-                        @{string[] intro = award.GioiThieuPhim.Split(';');}
-                        @foreach (var str in intro)
-                        {<p class="text">@str</p>}
+                    if (userInfo.Count() > 0)
+                    {
+                        WebMail.UserName = userInfo.ElementAt(0).Email;
+                        WebMail.Password = emailPassword;
+                        WebMail.From = userInfo.ElementAt(0).Email;
+                    }
+                    else
+                    {
+                        WebMail.UserName = customerEmail;
+                        WebMail.Password = emailPassword;
+                        WebMail.From = customerEmail;
 
-                        <p class="text">Nội dung:</p>
-                        @{string[] content = award.NoiDungPhim.Split(';');}
-                        @foreach (var str in content)
-                        {<p class="text">@str</p>}
-                    </div>
-                    <div class="trailer col-md-8">
-                        <iframe width="560" height="315" src="@award.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="more-info col-md-4">
-                        <div class="top">
-                            <p class="text">Đạo diễn: @award.DaoDien</p>
-                            <p class="text">Nhà sản xuất: @award.Nhasanxuat</p>
-                            <p class="text">Diễn viên: @award.DienVien</p>
-                            @if (@award.TheLoai == "Phim chiếu rạp")
-                            {
-                                <p class="text">Doanh thu: @award.GhiChu</p>
-                            }
-                            else
-                            {
-                                <p class="text">Phát sóng tại: @award.GhiChu</p>
-                            }
-                        </div>
-                        <div class="bottom">
-                            <a href="./filmpage.cshtml">
-                                <div class="btn-view-more btn">XEM THÊM</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                i = i + 2;
+                    }
+
+                    WebMail.Send(to: "mblamblabla@gmail.com",
+                        subject: "Phản hồi từ khách hàng: " + emailTitle,
+                        body: customerRequest+"<br/><br/>"+customerName+" - "+customerEmail);
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    return false;
+                }
+
             }
         }
-    </div>
-</section>
-<section id="actor-awarded">
-    <h3 class="title">Thông tin nghệ sĩ đạt giải</h3>
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            @foreach (var actor in actorList)
-            {
-                <div class="swiper-slide">
-                    <div class="info-content col-md-12">
-                        <div class="gr-row-lg">
-                            <div class="avatar">
-                                <img src="@actor.AnhDaiDienDV">
+
+        <!--Begin page content-->
+        <section id="kv">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    @for (int c1 = 0; c1 < newsList.Count(); c1++)
+                    {
+                        <div class="swiper-slide">
+                            <div id="banner@(c1 + 1) " class="banner">
+                                <div class="banner-img">
+                                    <img src="@newsList.ElementAt(c1).LinkAnhBia" />
+                                </div>
+                                <div class="info-content animation">
+                                    <div class="black-background"></div>
+                                    <div class="top-block">
+                                        <h3 class="title">@newsList.ElementAt(c1).TieuDe</h3>
+                                        <p class="text">
+                                            @{string[] content = @newsList.ElementAt(c1).GioiThieuTT.Split(';');}
+                                            @foreach (var str in content)
+                                            {
+                                                @str
+                                                <br>
+                                                @*if (Array.IndexOf(content,str) < content.Count() - 1)
+                                                    {
+                                                        <br>
+                                                    }*@
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="bottom-block">
+                                        <a href="./newspage.cshtml?newID=@newsList.ElementAt(c1).MaTinTuc">
+                                            <div class="btn-view-more btn">XEM THÊM</div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="name">@actor.TenDV</p>
-                            <p class="job">--@actor.TenGiaiThuongDienVien--</p>
-                            <p class="text">Tên thật: @actor.TenThatDV</p>
-                            <p class="text">Biệt danh: @actor.BietDanhDV</p>
-                            <p class="text">Ngày sinh: @actor.NgaySinhDV</p>
-                            <p class="text">Quê quán: @actor.QueQuanDV</p>
                         </div>
-                        <div class="gr-row-sm">
-                            <hr />
-                            <div class="gr-row-lg">
-                                <p class="text">@actor.SoLuocDV</p>
-                            </div>
-                            <div class="gr-row-sm row">
-                                <a href="./actorpage.cshtml">
-                                    <div class="btn-view-more btn">XEM THÊM</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    }
                 </div>
-            }
-        </div>
-        <div class="swiper-pagination"></div>
-    </div>
-</section>
-<section id="contact-us">
-    <h3 class="title">Liên hệ với chúng tôi</h3>
-    <form method="post" action="~/sendEmail.cshtml">
-        <div class="row contact-us-form">
-            <div class="col-md-6">
-                <div class="form-col">
-                    <label class="form-row">Tên khán thính giả:</label>
-                    <input class="form-row" type="text" name="customerName" placeholder="Nhập tên khán thính giả">
-                </div>
-                <div class="form-col">
-                    <label class="form-row">Địa chỉ email:</label>
-                    <input class="form-row" type="email" name="customerEmail" placeholder="Nhập địa chỉ email">
-                </div>
-                <div class="form-col">
-                    <label class="form-row">Tiêu đề:</label>
-                    <input class="form-row" type="text" name="emailTitle" placeholder="Nhập tiêu đề">
-                </div>
-                <div class="form-col">
-                    <label class="form-row">Nội dung:</label>
-                    <textarea class="form-row" id="txtContent-Contact-Us" name="customerRequest"></textarea>
-                </div>
-                <div class="row row-btn">
-                    <a>
-                        <input class="btn btn-view-more" type="submit" value="GỬI LỜI NHẮN">
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+        <section id="history">
+            <div class="info-content">
+                <h3 class="title">Lịch sử giải thưởng cánh diều vàng</h3>
+                <p class="text">
+                    Giải thưởng Hội điện ảnh Việt Nam, có tên gọi là Cánh Diều Vàng (tiếng Anh: Golden Kites Awards) là một giải thưởng điện ảnh hàng năm của Hội Điện ảnh Việt Nam.
+                    Giải thưởng được trao vào khoảng tháng ba, cho những tác phẩm điện ảnh sản xuất trong năm trước đó. Giải được tổ chức lần đầu tiên là Cánh diều vàng 2002, diễn ra vào đầu 2003.
+                    Trong các hạng mục trao giải còn có Cánh diều bạc và Cánh diều đồng, tuy có những năm bị loại bỏ. Mặc dù là giải thưởng điện ảnh, Cách diều vàng còn trao cho cả các tác phẩm truyền hình và phim video.
+                </p>
+                <p class="text">
+                    Thực chất Cánh diều vàng là một giải thưởng mang tính nội bộ nằm trong hệ thống giải thưởng chung của Hội Liên hiệp văn học nghệ thuật.
+                    Hội Liên hiệp văn học nghệ thuật gồm có bảy hội: văn học, âm nhạc, sân khấu, mỹ thuật, nhiếp ảnh, kiến trúc, điện ảnh.
+                    Nhằm khuyến khích các nghệ sĩ thông qua tác phẩm, hàng năm Chính phủ cấp kinh phí cho mỗi hội để trao giải thưởng.
+                    Giải của Hội Điện ảnh bắt đầu trao từ năm 1993.
+                </p>
+                <p class="text">
+                    Năm 2003, Hội Điện ảnh Việt Nam đặt tên cho giải của mình là Cánh diều vàng, và kết hợp cùng Đài Truyền hình Việt Nam đưa
+                    buổi lễ trao giải lên sóng truyền hình trực tiếp với sự hỗ trợ của các doanh nghiệp thông qua quảng cáo.
+                    Qua lịch sử của giải thưởng, nhiều hạng mục của giải được thay đổi. Ở giải Cánh diều vàng 2005, Cánh diều bạc và Cánh diều đồng bị bỏ bớt.
+                    Đến giải 2006, Cánh diều bạc được khôi phục và bằng khen thay cho Cánh diều đồng. Năm 2007, Hội Điện ảnh trao tặng thêm Cách diều bạc và hai giải phụ là
+                    Giải phim phục vụ khán giả đông nhất và Giải phim bán được nhiều vé nhất....
+                </p>
+                <div class="row">
+                    <a href="~/historypage.cshtml">
+                        <div class="btn-view-more btn">XEM THÊM</div>
                     </a>
                 </div>
-                <blockquote>Xin chân thành cám ơn bạn đã đóng góp ý kiến!</blockquote>
             </div>
-            <div class="col-md-6">
-                <blockquote class="line" id="text-title">Lời cảm ơn</blockquote>
-                <blockquote>
-                    Cảm ơn quý khán thính giả đã sử dụng dịch vụ và đóng góp ý kiến cho chúng tôi. Mọi ý kiến đóng góp sẽ giúp chúng tôi cải thiện chất lượng dịch vụ cũng như chất lượng giải thưởng tốt hơn, đáp ứng sự kỳ vọng của quý vị. Mọi ý kiến đóng góp xin hãy điền vào form kế bên, chúng tôi sẽ cố gắng phản hồi một cách sớm nhất!<br />Chúc quý khách có những phút giây bổ ích khi sử dụng dịch vụ. Xin chân thành cám ơn!
-                </blockquote>
-                <a class="thumbnail" id="location-in-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.288864253994!2d105.84942521440726!3d21.021124793416007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9094d1534d%3A0x3b2f0f137b8e5586!2zQsOhbyDEkGnhu4duIOG6om5oIFZp4buHdCBOYW0!5e0!3m2!1sen!2s!4v1541364871840" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
-                </a>
+            <div class="history-img">
+                <img src="~/Images/histoty-1.png">
             </div>
-        </div>
-    </form>
-</section>
-<section id="donors">
-    <h3 class="title">Các nhà tài trợ</h3>
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="~/Images/nvl-logo.png">
+        </section>
+        <section id="film-awarded">
+            <h3 class="title">Thông tin các tác phẩm điện ảnh đạt giải</h3>
+            <div class="panel-controller">
+                @{
+                    var i = 1; string awardType = "";
+                    foreach (var award in filmAwardList)
+                    {
+                        if (award.TenGiaiThuongPhim == "Cánh diều vàng")
+                        { awardType = "gold"; }
+                        else if (award.TenGiaiThuongPhim == "Cánh diều bạc")
+                        { awardType = "silver"; }
+                        <div class="panel-controller-element col-lg-3 col-md-3 col-sm-8 col-xs-12" data-index="film-@i">
+                            <div class="content">
+                                <div class="img">
+                                    <img src="@award.Link">
+                                </div>
+                                <div class="award-archieve row">
+                                    <div class="award-img col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                        @if (awardType == "gold")
+                                        {<img src="~/Images/film-award-logo-1.png">}
+                                        else if (awardType == "silver")
+                                        {<img src="~/Images/film-award-logo-2.png">}
+                                    </div>
+                                    <div class="@awardType-award award-name col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                        <div class="award">@award.TenGiaiThuongPhim</div>
+                                        <div class="category">@award.TenLoaiPhim</div>
+                                        <p>-----</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        i = i + 1;
+                    }
+                }
             </div>
-            <div class="swiper-slide">
-                <img src="@Href("~/Images/va-logo.png")">
-            </div>
-            <div class="swiper-slide">
-                <img src="~/Images/hnhn-logo.png">
-            </div>
-            <div class="swiper-slide">
-                <img src="~/Images/dbd-logo.png">
-            </div>
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </div>
-</section>
-<!--End page content-->
+            <div class="panel-content">
+                @{
+                    i = 1;
+                    foreach (var award in filmAwardList)
+                    {
+                        <div id="film-@i" class="film hidden">
+                            <div class="content">
 
-<!--Script js for page-->
-@section scripts{
-    <script type="text/javascript" src="~/Scripts/js/index.js"></script>
-}
+                                <h3 class="title">@award.TenPhim</h3>
+                                <p class="award">*---@award.TenGiaiThuongPhim - @award.TenLoaiPhim---*</p>
+                                @{string[] intro = award.GioiThieuPhim.Split(';');}
+                                @foreach (var str in intro)
+                                {<p class="text">@str</p>}
+
+                                <p class="text">Nội dung:</p>
+                                @{string[] content = award.NoiDungPhim.Split(';');}
+                                @foreach (var str in content)
+                                {<p class="text">@str</p>}
+                            </div>
+                            <div class="trailer col-md-8">
+                                <iframe width="560" height="315" src="@award.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="more-info col-md-4">
+                                <div class="top">
+                                    <p class="text">Đạo diễn: @award.DaoDien</p>
+                                    <p class="text">Nhà sản xuất: @award.Nhasanxuat</p>
+                                    <p class="text">Diễn viên: @award.DienVien</p>
+                                    @if (@award.MaLoaiPhim == "LP1")
+                                    {
+                                        <p class="text">Doanh thu: @award.GhiChu</p>
+                                    }
+                                    else if (@award.MaLoaiPhim == "LP2")
+                                    {
+                                        <p class="text">Phát sóng tại: @award.GhiChu</p>
+                                    }
+                                </div>
+                                <div class="bottom">
+                                    <a href="./filmpage.cshtml?filmID=@award.MaPhim">
+                                        <div class="btn-view-more btn">XEM THÊM</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        i = i + 1;
+                    }
+                }
+            </div>
+        </section>
+        <section id="actor-awarded">
+            <h3 class="title">Thông tin nghệ sĩ đạt giải</h3>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    @foreach (var actor in actorList)
+                    {
+                        <div class="swiper-slide">
+                            <div class="info-content col-md-12">
+                                <div class="gr-row-lg">
+                                    <div class="avatar">
+                                        <img src="@actor.HinhAnhDV">
+                                    </div>
+                                    <p class="name">@actor.TenDV</p>
+                                    <p class="job">--@actor.TenGiaiThuongDV--</p>
+                                    <p class="text">Tên thật: @actor.TenThatDV</p>
+                                    <p class="text">Biệt danh: @actor.BietDanhDV</p>
+                                    <p class="text">Ngày sinh: @actor.NgaySinhDV</p>
+                                    <p class="text">Quê quán: @actor.QueQuanDV</p>
+                                </div>
+                                <div class="gr-row-sm">
+                                    <hr />
+                                    <div class="gr-row-lg">
+                                        <p class="text">@actor.SoLuocDV</p>
+                                    </div>
+                                    <div class="gr-row-sm row">
+                                        <a href="./actorpage.cshtml?actorID=@actor.MaDV">
+                                            <div class="btn-view-more btn">XEM THÊM</div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        <section id="contact-us">
+            <h3 class="title">Liên hệ với chúng tôi</h3>
+            <form method="post">
+                <div class="row contact-us-form">
+                    <div class="col-md-6">
+                        <div class="form-col">
+                            <label class="form-row">Tên khán thính giả:</label>
+                            <input class="form-row" type="text" name="customerName" id="customerName" placeholder="Nhập tên khán thính giả" value="@Session["userName"]">
+                        </div>
+                        <div class="form-col">
+                            <label class="form-row">Địa chỉ email:</label>
+                            <input class="form-row" type="email" name="customerEmail" id="customerEmail" placeholder="Nhập địa chỉ email" value="@Session["userEmail"]">
+                        </div>
+                        <div class="form-col">
+                            <label class="form-row">Mật khẩu email:</label>
+                            <input class="form-row" type="password" name="emailPassword" id="emailPassword" placeholder="Nhập mật khẩu email">
+                        </div>
+                        <div class="form-col">
+                            <label class="form-row">Tiêu đề:</label>
+                            <input class="form-row" type="text" name="emailTitle" placeholder="Nhập tiêu đề">
+                        </div>
+                        <div class="form-col">
+                            <label class="form-row">Nội dung:</label>
+                            <textarea class="form-row" id="txtContent-Contact-Us" name="customerRequest"></textarea>
+                        </div>
+                        <div class="row row-btn">
+                            <a>
+                                <input class="btn btn-view-more" type="submit" value="GỬI LỜI NHẮN">
+                            </a>
+                        </div>
+                        <input type="hidden" name="action" value="sendEmail" />
+                        <blockquote>Xin chân thành cám ơn bạn đã đóng góp ý kiến!</blockquote>
+                    </div>
+                    <div class="col-md-6">
+                        <blockquote class="line" id="text-title">Lời cảm ơn</blockquote>
+                        <blockquote>
+                            Cảm ơn quý khán thính giả đã sử dụng dịch vụ và đóng góp ý kiến cho chúng tôi. Mọi ý kiến đóng góp sẽ giúp chúng tôi cải thiện chất lượng dịch vụ cũng như chất lượng giải thưởng tốt hơn, đáp ứng sự kỳ vọng của quý vị. Mọi ý kiến đóng góp xin hãy điền vào form kế bên, chúng tôi sẽ cố gắng phản hồi một cách sớm nhất!<br />Chúc quý khách có những phút giây bổ ích khi sử dụng dịch vụ. Xin chân thành cám ơn!
+                        </blockquote>
+                        <a class="thumbnail" id="location-in-map">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.288864253994!2d105.84942521440726!3d21.021124793416007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9094d1534d%3A0x3b2f0f137b8e5586!2zQsOhbyDEkGnhu4duIOG6om5oIFZp4buHdCBOYW0!5e0!3m2!1sen!2s!4v1541364871840" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="donors">
+            <h3 class="title">Các nhà tài trợ</h3>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="~/Images/nvl-logo.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="@Href("~/Images/va-logo.png")">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="~/Images/hnhn-logo.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="~/Images/dbd-logo.png">
+                    </div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+        <!--End page content-->
+        <!--Script js for page-->
+        @section scripts{
+            <script type="text/javascript" src="~/Scripts/js/index.js"></script>
+        }

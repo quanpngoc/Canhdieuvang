@@ -3,6 +3,134 @@
     Page.Title = "Đăng ký - Giải thưởng cánh diều vàng";
 }
 
+@{
+
+    var result_signup = onPost_SignupAccount();
+    <script type="text/javascript">
+        if ("@result_signup.ToString()" == "1")
+            setTimeout(function () {
+                alert("Đăng ký không thành công, xin hãy kiểm tra lại!");
+            }, 5000);
+        else if ("@result_signup.ToString()" == "2") {
+            setTimeout(function () {
+                alert("Đăng ký thành công!");
+            }, 5000);
+        }
+    </script>
+    
+}
+
+@functions{
+
+    //properties
+    public string action { get; set; }
+    public string username { get; set; }
+    public string account { get; set; }
+    public string password { get; set; }
+    public string email { get; set; }
+    public string birthday { get; set; }
+    public string phonenumber { get; set; }
+    public string facebook { get; set; }
+    public WebImage avatar { get; set; }
+    string avatarPath = "Images/avatar/";
+
+    public int onPost_SignupAccount()
+    {
+        int result = 0;
+        if (IsPost)
+        {
+            account = Request.Form["account"];
+            password = Request.Form["password"];
+            username = Request.Form["username"];
+            email = Request.Form["email"];
+            birthday = Request.Form["birthday"];
+            phonenumber = Request.Form["phonenumber"];
+            facebook = Request.Form["facebook"];
+            action = Request.Form["action"];
+
+            avatar = WebImage.GetImageFromRequest();
+            var newFileName = "";
+            var imagePath = "";
+            
+            if (account == "" || password == "" || username == "" || email == "" || birthday == "")
+            {
+                result = 1;
+                return result;
+            }
+
+            if (action == "signup")
+            {
+                if (!checkAccountExist())
+                {
+                    if(avatar != null)
+                    {
+                        //Lưu file hình ảnh vào folder - Lưu path của image
+                        newFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(avatar.FileName);
+                        imagePath = @"Images\avatar\" + newFileName;
+                        avatarPath += newFileName.ToString();
+                        avatar.Save(@"~\" + imagePath);
+                    }
+                    var insertResult = insertAccount();
+                    if (insertResult == true)
+                        result = 2;
+                    else
+                        result = 1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public bool insertAccount()
+    {
+        var db = Database.Open("DefaultConnection");
+        var index = getMaxUserID();
+        var accountInfo = db.Query("INSERT INTO Users VALUES('"+index+"',N'"+username+"','"+account+"','"+password+"','"+avatarPath+"','"+birthday+"','"+email+"','"+phonenumber+"','"+facebook+"',0,N'Khán giả');");
+
+        if (accountInfo != null)
+            return true;
+
+        return false;
+        db.Close();
+    }
+
+    public bool checkAccountExist()
+    {
+        var db = Database.Open("DefaultConnection");
+
+        var accountInfo = db.Query("SELECT * FROM Users WHERE TenDangNhap = '"+account+"'");
+
+        if (accountInfo.Count() > 0)
+            return true;
+
+        return false;
+        db.Close();
+    }
+
+    public string getMaxUserID()
+    {
+        var db = Database.Open("DefaultConnection");
+
+        var accountInfo = db.Query("SELECT MAX(MaNguoiDung) AS MaxMaND FROM Users");
+        string maxUserID = accountInfo.ElementAt(0).MaxMaND;
+        string index = (int.Parse(maxUserID.Substring(2, 3)) + 1).ToString();
+
+        switch (index.Length)
+        {
+            case 1:
+                index = "00" + index;
+                break;
+            case 2:
+                index = "0" + index;
+                break;
+        }
+
+        return maxUserID.Substring(0, 2)+index;
+        db.Close();
+    }
+}
+
 <!--Style for element in page-->
 @section styles {
     <link rel="stylesheet" href="~/Content/css/signup.css" />
@@ -17,32 +145,31 @@
                 <img src="~/Images/signup_banner.jpg">
             </div>
         </div>
-        <form class="row col-md-8">
+        <form class="row col-md-8" method="post" enctype="multipart/form-data">
             <div class="right-form">
                 <div class="pick-avatar">
                     <img id="frame" ondrop="drop(event)" ondragover="allowDrop(event)"></img>
-                    <input class="choose-img" type="file" value="CHỌN ẢNH TỪ MÁY">
+                    <input class="choose-img" type="file" value="CHỌN ẢNH TỪ MÁY" name="Image">
+                </div>
+                <div class="attr-element">
+                    <label>Tài khoản:</label>
+                    <input type="text" name="account" placeholder="Nhập tài khoản">
+                </div>
+                <div class="attr-element">
+                    <label>Mật khẩu:</label>
+                    <input type="password" name="password" placeholder="Nhập họ tên của bạn">
                 </div>
                 <div class="attr-element">
                     <label>Họ tên:</label>
-                    <input type="text" name="email" placeholder="Nhập họ tên của bạn">
+                    <input type="text" name="username" placeholder="Nhập họ tên của bạn">
                 </div>
                 <div class="attr-element">
                     <label>Ngày tháng năm sinh:</label>
-                    <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
+                    <input type="date" name="birthday" placeholder="Nhập ngày sinh">
                 </div>
                 <div class="attr-element">
                     <label>Địa chỉ email:</label>
                     <input type="email" name="email" placeholder="Nhập địa chỉ email">
-                </div>
-                <div class="attr-element">
-                    <label>Số điện thoại:</label>
-                    <input type="text" name="phonenumber" placeholder="Nhập số điện thoại">
                 </div>
                 <div class="attr-element">
                     <label>Địa chỉ facebook (nếu có):</label>
@@ -55,9 +182,10 @@
                         <span class="checkmark"></span>
                     </label>
                 </div>
+                <input type="hidden" name="action" value="signup" />
                 <div class="btn-group row">
                     <div class="col-md-6">
-                        <a><div class="btn signup-btn">ĐĂNG KÝ</div></a>
+                        <input type="submit" class="btn signup-btn" value="ĐĂNG KÝ" />
                     </div>
                     <div class="col-md-6">
                         <a href="./index.cshtml"><div class="btn cancel-btn">HỦY</div></a>
@@ -78,7 +206,6 @@
     </div>
 </div>
 <!--End page content-->
-
 <!--Script js for page-->
 @section scripts{
     <script type="text/javascript" src="~/Scripts/js/signup.js"></script>

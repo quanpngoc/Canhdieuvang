@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="~/Shared/lib/footer.css" />
     <link rel="stylesheet" href="~/Content/css/main.css" />
     @RenderSection("styles", required: false)
+    <script type="text/javascript" src="~/Shared/lib/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Shared/lib/swiper-4.4.2/dist/js/swiper.min.js"></script>
+    <script type="text/javascript" src="~/Shared/lib/jquery.bpopup.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.user-avatar').on('click', function () {
+                showLoginPopup();
+            });
+
+            function showLoginPopup() {
+                $('#login-popup').bPopup({
+                    modalClose: true,
+                    opacity: 0.6,
+                    positionStyle: 'fixed',
+                    closeClass: 'close-login-popup',
+                });
+            }
+        });
+    </script>
+    @RenderSection("scripts", required: false)
     <title>@Page.Title</title>
 </head>
 <body>
@@ -16,9 +37,4 @@
     @RenderBody()
     @RenderPage("_footer.cshtml")
 </body>
-<script type="text/javascript" src="~/Shared/lib/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="~/Shared/lib/swiper-4.4.2/dist/js/swiper.min.js"></script>
-<script type="text/javascript" src="~/Shared/lib/jquery.bpopup.min.js"></script>
-@RenderSection("scripts", required:false)
 </html>

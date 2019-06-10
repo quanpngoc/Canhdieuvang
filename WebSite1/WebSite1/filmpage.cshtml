@@ -1,6 +1,50 @@
 ﻿@{
     Layout = "_Layout.cshtml";
     Page.Title = "Thông tin phim - Giải thưởng cánh diều vàng";
+    Page.Index = -1;
+}
+
+@{
+    var db = Database.Open("DefaultConnection");
+
+    if (db == null)
+    {
+        <script>setTimeout(function () {alert('Kiểm tra nối đến DB của bạn!');}, 2500);</script>
+    }
+
+    var filmID = Request["filmID"];
+    string userID = "ND1";
+    if (Session["userID"] != null)
+    {
+        userID = Session["userID"].ToString();
+    }
+
+
+    if (filmID == null)
+    {
+        <script type="text/javascript">setTimeout(function () {alert('Không tìm thấy film bạn muốn tìm!');}, 5000);</script>
+    }
+
+    if (userID.IsEmpty())
+    {
+        <script type="text/javascript">setTimeout(function () {alert('Xin hãy đăng nhập trước khi sử dụng');}, 5000);</script>
+    }
+
+    var filmInfo = db.Query("SELECT * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim WHERE MaPhim = '" + filmID + "'").ElementAt(0);
+    var filmImgList = db.Query("SELECT * FROM HinhAnhPhim WHERE MaPhim = '" + filmID + "'");
+    var filmAwardList = db.Query("SELECT TenGiaiThuongPhim, Nam, NoiDungGiaiThuong, HinhAnhGT FROM GiaiThuongPhim WHERE MaPhim = '" + filmID + "'");
+    var othersFilm = db.Query("SELECT DISTINCT TOP 8 Phim.MaPhim, TenPhim, Link " +
+        "FROM Phim INNER JOIN HinhAnhPhim ON Phim.MaHinhAnhPhim = HinhAnhPhim.MaHinhAnhPhim");
+    var commentList = db.Query("SELECT * FROM BinhLuanPhim JOIN Users ON BinhLuanPhim.MaNguoiDung = Users.MaNguoiDung WHERE MaPhim = '" + filmID + "'");
+
+    var currentUserInfo = db.Query("SELECT TOP 1 MaNguoiDung FROM Users").ElementAt(0);
+    if (Session["userID"] != "" && Session["userID"] != null)
+    {
+        currentUserInfo = db.Query("SELECT * FROM Users WHERE MaNguoiDung = '" + userID + "'").ElementAt(0);
+    }
+
+
+    db.Close();
 }
 
 <!--Style for element in page-->
@@ -8,35 +52,155 @@
     <link rel="stylesheet" href="~/Content/css/film.css" />
 }
 
+<!--Script js for page-->
+@section scripts{
+    @*<script type="text/javascript" src="~/Scripts/js/film.js"></script>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var some_image = new Swiper('#picture-in-film .swiper-container', {
+                speed: 500,
+                sliderPerView: 3,
+                // autoplay: {
+                //     delay: 5000,
+                //     disableOnInteraction: false,
+                // },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1,
+                        spaceBetweenSlides: 0
+                    }
+                }
+            });
+
+            var award_achieved = new Swiper('#award-achieved .swiper-container', {
+                speed: 500,
+                slidesPerView: 3,
+                centeredSlides: false,
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1,
+                        spaceBetweenSlides: 0
+                    }
+                }
+            });
+
+            var other_films = new Swiper('#other-films .swiper-container', {
+                speed: 500,
+                slidesPerView: 3.25,
+                centeredSlides: false,
+                spaceBetween: 20,
+                lazy: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.25,
+                        spaceBetweenSlides: 0
+                    }
+                }
+            });
+
+            $('#picture-in-film .screen-img').on('click', function () {
+                var img = $('#img-popup .img img').attr('src', $(this).children().attr('src'));
+                popup();
+            });
+
+            $('#img-popup .popup-container img').css('max-width', screen.width);
+            $('#img-popup .popup-container img').css('max-height', screen.height - 200);
+
+            var isHideFilmInfo = true;
+
+            $('#more-film-info').on('click', function () {
+                if (isHideFilmInfo) {
+                    $('.film-info .main-info .content').animate({ height: '200%' }, "slow");
+                    $(this).animate({ textIndent: 0 }, {
+                        step: function (now, fx) {
+                            $(this).css('-webkit-transform', 'rotate(180deg)');
+                        },
+                        duration: 'slow'
+                    }, 'linear');
+                    isHideFilmInfo = false;
+                } else {
+                    $('.film-info .main-info .content').animate({ height: '64%' }, "slow");
+                    $(this).animate({ textIndent: 0 }, {
+                        step: function (now, fx) {
+                            $(this).css('-webkit-transform', 'rotate(0deg)');
+                        },
+                        duration: 'slow'
+                    }, 'linear');
+                    isHideFilmInfo = true;
+                }
+
+            });
+
+            function popup() {
+                $('#img-popup').bPopup({
+                    modalClose: true,
+                    opacity: 0.6,
+                    positionStyle: 'fixed',
+                    speed: 650,
+                    transition: 'slideIn',
+                    transitionClose: 'slideBack',
+                    closeClass: 'close-popup-btn',
+                    onOpen: function () {
+                        $('body').css('overflow', 'hidden');
+                    },
+                    onClose: function () {
+                        $('body').css('overflow', 'auto');
+                    }
+                });
+            }
+        });
+    </script>
+}
+
 <!--Begin page content-->
 <section class="film-info">
     <div class="container-fluid">
         <div class="extra-info col-md-5">
             <div class="trailer-film">
-                <iframe width="100%" height="45%" src="https://www.youtube.com/embed/_affkHceSj4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="45%" src="@filmInfo.Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="some-info">
-                <p class="text">Đạo diễn: Lê Thanh Sơn</p>
-                <p class="text">Nhà sản xuất: Charlie Nguyễn</p>
-                <p class="text">Diễn viên: Kiều Minh Tuấn, Kaity Nguyễn, Will 365, Châu Bùi, Quang Minh, Nguyễn Chánh Tín, Huy Khánh, Kathy Uyên, Don Nguyễn</p>
-                <p class="text">Doanh thu: 171 tỷ VND</p>
+                <p class="text">Đạo diễn: @filmInfo.DaoDien</p>
+                <p class="text">Nhà sản xuất: @filmInfo.NhaSanXuat</p>
+                <p class="text">Diễn viên: @filmInfo.DienVien</p>
+                @switch (filmInfo.MaLoaiPhim)
+                {
+                    case "LP1":
+                        <p class="text">Doanh thu: @filmInfo.GhiChu</p>
+                        break;
+                    case "LP2":
+                        <p class="text">Phát sóng tại: @filmInfo.GhiChu</p>
+                        break;
+                }
             </div>
         </div>
         <div class="main-info col-md-7">
             <div class="content">
-                <h3 class="name">Em chưa 18</h3>
-                <p class="text"><i>Em chưa 18</i> là bộ phim điện ảnh tình cảm hài hước Việt Nam của đạo diễn Lê Thanh Sơn thực hiện, do Charlie Nguyễn và hãng phim Chánh Phương sản xuất năm 2017. Phim có sự góp mặt của các diễn viên: Kiều Minh Tuấn, Kaity Nguyễn, Will 365, Quang Minh, Huy Khánh. Em chưa 18 được công chiếu vào ngày 28 tháng 04 năm 2017 tại các rạp trên toàn quốc.</p>
-                <p class="text">Em chưa 18 nhanh chóng trở thành phim có doanh thu phim Việt cao nhất mọi thời đại. Tại Liên hoan phim Việt Nam lần thứ 20, phim đoạt giải Bông Sen Vàng và diễn viên Kaity Nguyễn đoạt giải Nữ diễn viên chính xuất sắc.</p>
+                <h3 class="name">@filmInfo.TenPhim</h3>
+                @{string[] content = filmInfo.NoiDungPhim.Split(';');}
+                @foreach (var str in content)
+                {<p class="text">@str</p>}
+
                 <p class="text">Giới thiệu về nội dung</p>
-                <p class="text">Em chưa 18 kể về “cú ngã” của tay chơi Hoàng. Là một công tử với túi tiền rủng rỉnh, gương mặt đẹp trai, thích qua đêm với các cô gái nhưng không bao giờ ngủ với cô nàng nào lần thứ hai, Hoàng vướng vào rắc rối khi cặp với cô nàng trẻ con Linh Đan. Em chưa 18 xoay quanh chuyện anh chàng “trai hư” 35 tuổi trong một lần đi bar đã có tình một đêm với một hot girl lần đầu gặp gỡ. Tuy nhiên, sáng hôm sau, anh chàng mới tá hỏa khi biết cô nàng có tên Linh Đan này chưa đủ 18 tuổi. Điều trớ trêu là Linh Đan đã quay lại video cảnh “ân ái” giữa hai người và dọa tố cáo do quan hệ với người dưới tuổi vị thành niên, nếu anh chàng tay chơi này không chịu làm bạn trai của cô. Những tình huống dở khóc dở cười đẩy cả hai xích lại gần nhau hơn. Những bí mật về nàng hot girl dần được hé lộ… Phim tạo được dấu ấn ở những tình huống hài và thẳng thắn nói đến cuộc sống hiện đại ngày nay của các cô cậu tuổi teen – không phải chỉ ở nhà làm “con ngoan trò giỏi” như trước kia mà đã biết lên bar vào cuối tuần, xài điện thoại xịn và sẵn sàng bộc lộ cảm xúc của bản thân chứ chẳng cần che giấu trước mặt cha mẹ.
+                @{string[] introContentFilm = filmInfo.GioiThieuNoiDung.Split(';');}
+                @foreach (var str in introContentFilm)
+                {<p class="text">@str</p>}
+
                 <p class="text">Nội dung phim</p>
-                <p class="text">Hoàng là một người huấn luyện viên yoga, mà cũng là một tay chơi sát gái, thường qua đêm với các cô gái. Trớ trêu thay, một lần nọ Hoàng tán tỉnh và quan hệ với một cô bé chưa đủ 18 tuổi tên Linh Đan.</p>
-                <p class="text">Linh Đan đã quay lại đoạn clip đêm đó và bắt buộc Hoàng phải làm bạn trai của cô. Trước đây Linh Đan từng bị bạn trai trong trường phản bội, bây giờ cô muốn dùng Hoàng để chọc tức bạn trai cũ.</p>
-                <p class="text">Trong thời gian giả làm bạn trai mới của Linh Đan, Hoàng đã dạy yoga cho một nữ diễn viên tên Uyên Thi. Hoàng biết được kế hoạch của Linh Đan và la mắng cô. Tony - bạn trai cũ của Linh Đan vẫn đang vui vẻ bên cô hot girl Yến, chứ không hề bị đau khổ như Linh Đan nghĩ. Linh Đan khóc và đưa điện thoại cho Hoàng xóa cái clip.</p>
-                <p class="text">Cứ tưởng sẽ không gặp nhau nữa, nhưng Hoàng vẫn thường xuyên đưa đón Linh Đan đi học, chở Linh Đan đi chơi. Trong trường của Linh Đan sắp tổ chức một đêm vũ hội cuối năm, Tony đang là ứng cử viên nặng ký cho chức King, còn Linh Đan và Yến đang là ứng cử viên nặng ký cho chức Queen.</p>
-                <p class="text">Linh Đan nói với Hoàng rằng cô đã có thai, Hoàng liền kêu cô đi phá thai nhưng cô từ chối. Ông chủ của trung tâm yoga hốt hoảng khi nghe tin Hoàng đã làm cho một đứa con gái chưa đủ 18 tuổi có thai, nên đã đuổi việc Hoàng.</p>
-                <p class="text">Hoàng gọi điện cho ba và nghe ông tâm sự về quá khứ của ông, sau đó Hoàng suy nghĩ lại. Hoàng mua những món đồ dành cho em bé, rồi anh cầu hôn Linh Đan. Nhưng Linh Đan tiết lộ rằng cô không hề có thai và vào đêm hôm đó cô và Hoàng chưa xảy ra chuyện gì cả.</p>
-                <p class="text">Hoàng nhận ra mình đã yêu Linh Đan thật rồi, anh từ chối ngủ với Uyên Thi và chạy đến đêm vũ hội. Hoàng còn gọi điện kêu ba của Linh Đan chở cô đến vũ hội. Tại đây, Tony và Linh Đan đã giành được chức King và Queen. Tony bảo Linh Đan hãy đến với tình yêu thật sự của cô. Sau đó Hoàng và Linh Đan công khai tình cảm, rồi họ hôn nhau. Bộ phim kết thúc.</p>
+                @{string[] contentFilm = filmInfo.NoiDungPhim.Split(';');}
+                @foreach (var str in contentFilm)
+                {<p class="text">@str</p>}
             </div>
         </div>
     </div>
@@ -48,136 +212,29 @@
     <h3 class="title">Một số hình ảnh trong phim</h3>
     <div id="some-img" class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-0.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-1.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-2.jpg">
-                            </div>
-                        </a>
-                    </div>
+            @for (int i = 0; i < filmImgList.Count() / 6; i++)
+            {
+                <div class="swiper-slide">
+                    @for (int j = 0; j < filmImgList.Count() / 3; j++)
+                    {
+                        <div class="row">
+                            @for (int e = 6 * i; e < 6 * (i + 1); e++)
+                            {
+                                if (filmImgList.ElementAt(e).Link != null)
+                                {
+                                    <div class="img-container col-md-4">
+                                        <a>
+                                            <div class="screen-img">
+                                                <img src="@filmImgList.ElementAt(e).Link">
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
                 </div>
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-3.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-4.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-5.jpg">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-6.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-7.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-8.jpg">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-9.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-10.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-11.jpg">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-12.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-13.jpg">
-                            </div>
-                        </a>
-                    </div>
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-14.jpg">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="img-container col-md-4">
-                        <a>
-                            <div class="screen-img">
-                                <img src="/Images/film/em-chua-18-15.jpg">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
         <div class="swiper-button-prev swiper-button-white "></div>
         <div class="swiper-button-next swiper-button-white "></div>
@@ -188,39 +245,22 @@
         <h3 class="title">Các giải thưởng đã đạt được</h3>
         <div class="swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="award">
-                        <div class="award-img">
-                            <img src="~/Images/film/canh-dieu-vang.png">
-                        </div>
-                        <div class="award-content">
-                            <div class="name">Cánh diều bạc - Phim chiếu rạp - 2017</div>
-                            <div class="text">Trái với dự đoán của nhiều khán giả, "Em Chưa 18" đã để hụt giải thưởng quan trọng Cánh Diều Vàng. "Cô Ba Sài Gòn" đã chiến thắng tại hạng mục này lẫn Biên kịch xuất sắc.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="award">
-                        <div class="award-img">
-                            <img src="~/Images/film/canh-dieu-vang.png">
-                        </div>
-                        <div class="award-content">
-                            <div class="name">Cánh diều vàng - Đạo diễn xuất sắc nhất - 2017</div>
-                            <div class="text">là bộ phim thuần túy giải trí, nhưng đã lập nên cột mốc doanh thu lịch sử là 171 tỷ đồng, qua đó tạo ra cú hích lớn cho nền điện ảnh nước nhà. Phim có hai giải là Đạo diễn (Lê Thanh Sơn) và Nam diễn viên chính xuất sắc (Kiều Minh Tuấn).</div>
+                @foreach (var award in filmAwardList)
+                {
+                    <div class="swiper-slide">
+                        <div class="award">
+                            <div class="award-img">
+                                <img src="@award.HinhAnhGT">
+                            </div>
+                            <div class="award-content">
+                                <div class="name">@award.TenGiaiThuongPhim - @award.Nam</div>
+                                @{string[] awardContent = award.NoiDungGiaiThuong.Split(';');}
+                                @foreach (var str in awardContent)
+                                {<p class="text">@str</p>}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="award">
-                        <div class="award-img">
-                            <img src="~/Images/film/bong-sen-vang.jpeg">
-                        </div>
-                        <div class="award-content">
-                            <div class="name">Bông sen vàng - 2017</div>
-                            <div class="text">Với kỷ lục 175 tỷ đồng doanh thu phòng vé (vượt qua cả doanh thu của bộ phim Hollywood: "Kong: Skull Island") cùng nội dung hấp dẫn, "Em chưa 18" của đạo diễn Lê Thanh Sơn ngay từ đầu đã được xem là ứng cử viên sáng giá cho giải thưởng Bông Sen Vàng tại "Liên hoan phim Việt Nam lần thứ 20".</div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -229,156 +269,94 @@
     <div class="container">
         <div class="comments-content">
             <h3 class="title">Bình luận về tác phẩm</h3>
-            <div class="comment-container">
-                <i class="fa fa-close"></i>
-                <div class="comment">
-                    <div class="col-md-1 col-xs-4 block">
-                        <div class="comment-vote">
-                            <i class="like-btn fa fa-caret-up"></i>
-                            <p class="number-like">5</p>
-                            <i class="dislike-btn fa fa-caret-down"></i>
+            @foreach (var comment in commentList)
+            {
+                <div class="comment-container">
+                    <i class="fa fa-close"></i>
+                    <div class="comment">
+                        <div class="col-md-1 col-xs-4 block">
+                            <div class="comment-vote">
+                                <i class="like-btn fa fa-caret-up"></i>
+                                <p class="number-like">5</p>
+                                <i class="dislike-btn fa fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-xs-8 block">
+                            <div class="user">
+                                <div class="avatar">
+                                    <img src="@comment.HinhAnhNguoiDung">
+                                </div>
+                                <div class="user-info">
+                                    @{
+                                        string userName = comment.TenNguoiDung as string;
+                                        if (userName.Length > 16)
+                                        {
+                                            <p class="name">@userName.Substring(0, 13)...</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="name">@userName</p>
+                                        }
+                                    }
+                                    <p class="type-user">@comment.LoaiND</p>
+                                    <p class="score">@comment.Level</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-xs-12 block">
+                            <div class="comment-content">
+                                <div class="top-block row">
+                                    <p class="date-time-comment">@comment.ThoiGian</p>
+                                </div>
+                                <div class="mid-block">
+                                    <div class="comment-text">
+                                        <p class="text">@comment.BinhLuanPhim</p>
+                                    </div>
+                                </div>
+                                <div class="bottom-block row">
+                                    <div class="block col-md-6 col-xs-6">
+                                        <p class="amount-of-response"></p>
+                                    </div>
+                                    <div class="block col-md-6 col-xs-6">
+                                        @*<a><div class="btn see-response-btn">Xem phản hồi</div></a>*@
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-2 col-xs-8 block">
+                </div>
+            }
+            @if (Session["userID"] != "" && Session["userID"] != null)
+            {
+                <div class="comment-maker">
+                    <div class="col-md-2 col-xs-12 block">
                         <div class="user">
                             <div class="avatar">
-                                <img src="~/Images/nene.jpg">
+                                <img src="@currentUserInfo.HinhAnhNguoiDung">
                             </div>
                             <div class="user-info">
-                                <p class="name">Trần Văn A</p>
-                                <p class="type-user">Khán giả</p>
-                                <p class="score">1.2</p>
+                                @{
+                                    string currentUserName = currentUserInfo.TenNguoiDung as string;
+                                    if (currentUserName.Length > 16)
+                                    {
+                                        <p class="name">@currentUserName.Substring(0, 13)...</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="name">@currentUserName</p>
+                                    }
+                                }
+                                <p class="type-user">@currentUserInfo.LoaiND</p>
+                                <p class="score">@currentUserInfo.Level</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9 col-xs-12 block">
-                        <div class="comment-content">
-                            <div class="top-block row">
-                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                            </div>
-                            <div class="mid-block">
-                                <div class="comment-text">
-                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                </div>
-                            </div>
-                            <div class="bottom-block row">
-                                <div class="block col-md-6 col-xs-6">
-                                    <p class="amount-of-response">5 phản hồi</p>
-                                </div>
-                                <div class="block col-md-6 col-xs-6">
-                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-10 col-xs-12 block">
+                        <textarea class="comment-area"></textarea>
+                        <input type="submit" class="btn comment-btn" value="BÌNH LUẬN">
                     </div>
                 </div>
-            </div>
-            <div class="comment-container">
-                <i class="fa fa-close"></i>
-                <div class="comment">
-                    <div class="col-md-1 col-xs-4 block">
-                        <div class="comment-vote">
-                            <i class="like-btn fa fa-caret-up"></i>
-                            <p class="number-like">5</p>
-                            <i class="dislike-btn fa fa-caret-down"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-xs-8 block">
-                        <div class="user">
-                            <div class="avatar">
-                                <img src="~/Images/nene.jpg">
-                            </div>
-                            <div class="user-info">
-                                <p class="name">Trần Văn A</p>
-                                <p class="type-user">Khán giả</p>
-                                <p class="score">1.2</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9 col-xs-12 block">
-                        <div class="comment-content">
-                            <div class="top-block row">
-                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                            </div>
-                            <div class="mid-block">
-                                <div class="comment-text">
-                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                </div>
-                            </div>
-                            <div class="bottom-block row">
-                                <div class="block col-md-6 col-xs-6">
-                                    <p class="amount-of-response">5 phản hồi</p>
-                                </div>
-                                <div class="block col-md-6 col-xs-6">
-                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="comment-container">
-                <i class="fa fa-close"></i>
-                <div class="comment">
-                    <div class="col-md-1 col-xs-4 block">
-                        <div class="comment-vote">
-                            <i class="like-btn fa fa-caret-up"></i>
-                            <p class="number-like">5</p>
-                            <i class="dislike-btn fa fa-caret-down"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-xs-8 block">
-                        <div class="user">
-                            <div class="avatar">
-                                <img src="~/Images/nene.jpg">
-                            </div>
-                            <div class="user-info">
-                                <p class="name">Trần Văn A</p>
-                                <p class="type-user">Khán giả</p>
-                                <p class="score">1.2</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9 col-xs-12 block">
-                        <div class="comment-content">
-                            <div class="top-block row">
-                                <p class="date-time-comment">27-Nov-2018 8:41 AM</p>
-                            </div>
-                            <div class="mid-block">
-                                <div class="comment-text">
-                                    <p class="text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ipsam odio assumenda et at nemo optio dicta dolor corrupti praesentium!</p>
-                                </div>
-                            </div>
-                            <div class="bottom-block row">
-                                <div class="block col-md-6 col-xs-6">
-                                    <p class="amount-of-response">5 phản hồi</p>
-                                </div>
-                                <div class="block col-md-6 col-xs-6">
-                                    <a><div class="btn see-response-btn">Xem phản hồi</div></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="comment-maker">
-                <div class="col-md-2 col-xs-12 block">
-                    <div class="user">
-                        <div class="avatar">
-                            <img src="~/Images/nene.jpg">
-                        </div>
-                        <div class="user-info">
-                            <p class="name">Trần Văn A</p>
-                            <p class="type-user">Khán giả</p>
-                            <p class="score">1.2</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-10 col-xs-12 block">
-                    <textarea class="comment-area"></textarea>
-                    <a><div class="btn comment-btn">BÌNH LUẬN</div></a>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -386,61 +364,20 @@
     <h3 class="title">Một số tác phẩm khác</h3>
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <a>
-                    <div class="info-content swiper-lazy">
-                        <div class="avatar">
-                            <img data-src="/Images/film/toi-thay-hoa-vang-tren-co-xanh.jpg" class="swiper-lazy">
+            @foreach (var film in othersFilm)
+            {
+                <div class="swiper-slide">
+                    <a href="~/filmpage.cshtml?filmID=@film.MaPhim">
+                        <div class="info-content swiper-lazy">
+                            <div class="avatar">
+                                <img data-src="@film.Link" class="swiper-lazy">
+                            </div>
+                            <p class="name">@film.TenPhim</p>
                         </div>
-                        <p class="name">TÔI THẤY HOA VÀNG TRÊN CỎ XANH</p>
-                    </div>
-                    <div class="swiper-lazy-preloader"></div>
-                </a>
-            </div>
-            <div class="swiper-slide">
-                <a>
-                    <div class="info-content swiper-lazy">
-                        <div class="avatar">
-                            <img data-src="/Images/film/nguoi-phan-xu.jpg" class="swiper-lazy">
-                        </div>
-                        <p class="name">NGƯỜI PHÁN XỬ</p>
-                    </div>
-                    <div class="swiper-lazy-preloader"></div>
-                </a>
-            </div>
-            <div class="swiper-slide">
-                <a>
-                    <div class="info-content swiper-lazy">
-                        <div class="avatar">
-                            <img data-src="/Images/film/song-chung-voi-me-chong.jpg" class="swiper-lazy">
-                        </div>
-                        <p class="name">SỐNG CHUNG VỚI MẸ CHỒNG</p>
-                    </div>
-                    <div class="swiper-lazy-preloader"></div>
-                </a>
-            </div>
-            <div class="swiper-slide">
-                <a>
-                    <div class="info-content swiper-lazy">
-                        <div class="avatar">
-                            <img data-src="/Images/film/co-ba-sai-gon.jpg" class="swiper-lazy">
-                        </div>
-                        <p class="name">CÔ BA SÀI GÒN</p>
-                    </div>
-                    <div class="swiper-lazy-preloader"></div>
-                </a>
-            </div>
-            <div class="swiper-slide">
-                <a>
-                    <div class="info-content swiper-lazy">
-                        <div class="avatar">
-                            <img data-src="/Images/film/lat-mat.jpg" class="swiper-lazy">
-                        </div>
-                        <p class="name">LẬT MẶT 3</p>
-                    </div>
-                    <div class="swiper-lazy-preloader"></div>
-                </a>
-            </div>
+                        <div class="swiper-lazy-preloader"></div>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </section>
@@ -449,14 +386,9 @@
         <i class="fa fa-close close-popup-btn"></i>
         <div class="popup-content">
             <div class="img">
-                <img src="img/banner1.jpg">
+                <img src="">
             </div>
         </div>
     </div>
 </div>
 <!--End page content-->
-
-<!--Script js for page-->
-@section scripts{
-    <script type="text/javascript" src="~/Scripts/js/film.js"></script>
-}

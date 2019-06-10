@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 body {
   background-color: #f1f1f1; }
 
@@ -101,19 +101,21 @@ body #signup .signup-content form .right-form .attr-element label {
   font-size: 15px;
   font-weight: bold; }
 
-body #signup .signup-content form .right-form .attr-element input[type="text"], body #signup .signup-content form .right-form .attr-element input[type="password"], body #signup .signup-content form .right-form .attr-element input[type="email"], body #signup .signup-content form .right-form .attr-element select {
-  color: black;
-  padding: 10px 15px;
-  margin: 0;
-  border: 1px solid #ccc;
-  border-radius: 50px;
-  width: 100%;
-  font-size: 15px; }
+    body #signup .signup-content form .right-form .attr-element input[type="text"], body #signup .signup-content form .right-form .attr-element input[type="password"], body #signup .signup-content form .right-form .attr-element input[type="email"], body #signup .signup-content form .right-form .attr-element select, body #signup .signup-content form .right-form .attr-element input[type="date"] {
+        color: black;
+        padding: 10px 15px;
+        margin: 0;
+        border: 1px solid #ccc;
+        border-radius: 50px;
+        width: 100%;
+        font-size: 15px;
+    }
 
-body #signup .signup-content form .right-form .attr-element input[type="text"]:hover, body #signup .signup-content form .right-form .attr-element input[type="password"]:hover, body #signup .signup-content form .right-form .attr-element input[type="email"]:hover, body #signup .signup-content form .right-form .attr-element select:hover {
-  box-shadow: 0px 0px 10px #777;
-  -moz-box-shadow: 0px 0px 10px #777;
-  -webkit-box-shadow: 0px 0px 10px #777; }
+        body #signup .signup-content form .right-form .attr-element input[type="text"]:hover, body #signup .signup-content form .right-form .attr-element input[type="password"]:hover, body #signup .signup-content form .right-form .attr-element input[type="email"]:hover, body #signup .signup-content form .right-form .attr-element select:hover, body #signup .signup-content form .right-form .attr-element input[type="date"]:hover {
+            box-shadow: 0px 0px 10px #777;
+            -moz-box-shadow: 0px 0px 10px #777;
+            -webkit-box-shadow: 0px 0px 10px #777;
+        }
 
 body #signup .signup-content form .right-form .attr-element .date input[type="text"] {
   margin: 0;

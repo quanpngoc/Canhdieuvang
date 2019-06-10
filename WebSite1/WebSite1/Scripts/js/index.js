@@ -78,16 +78,21 @@ $(document).ready(function () {
     });
 
     checkNavPos();
-    function checkNavPos(){
-        if($(this).scrollTop()>=60){
-            $('.navbar').addClass('fixNav');
-            $('.user-avatar img').attr('src','Images/user-black.png');
-        }
-        else{
-            $('.navbar').removeClass('fixNav');
-            $('.user-avatar img').attr('src','Images/user-white.png');
-        }
-
+    function checkNavPos() {
+        avatarImgUrl = $('.user-avatar img').attr('src');
+        
+            if ($(this).scrollTop() >= 60) {
+                $('.navbar').addClass('fixNav');
+                if (avatarImgUrl == 'Images/user-white.png') {
+                    $('.user-avatar img').attr('src', 'Images/user-black.png');
+                }
+            }
+            else {
+                $('.navbar').removeClass('fixNav');
+                if (avatarImgUrl == 'Images/user-black.png') {
+                    $('.user-avatar img').attr('src', 'Images/user-white.png');
+                }
+            }
         // if($(this).scrollTop()>=500){
         //     $('#history .info-content').addClass('animation');
         // }
@@ -98,17 +103,4 @@ $(document).ready(function () {
     $(window).scroll(function(){
         checkNavPos();
     });
-
-    $('.user-avatar').on('click',function(){
-        showLoginPopup();
-    });
-
-    function showLoginPopup(){
-        $('#login-popup').bPopup({
-            modalClose: true,
-            opacity: 0.6,
-            positionStyle: 'fixed',
-            closeClass: 'close-login-popup',
-        });
-    }
 });

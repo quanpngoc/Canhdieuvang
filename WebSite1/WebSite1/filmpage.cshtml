@@ -9,7 +9,7 @@
 
     if (db == null)
     {
-        <script>setTimeout(function () {alert('Kiểm tra nối đến DB của bạn!');}, 2500);</script>
+        <script type="text/javascript">setTimeout(function () { alert('Kiểm tra nối đến DB của bạn!'); }, 2500);</script>
     }
 
     var filmID = Request["filmID"];
@@ -22,12 +22,12 @@
 
     if (filmID == null)
     {
-        <script type="text/javascript">setTimeout(function () {alert('Không tìm thấy film bạn muốn tìm!');}, 5000);</script>
+        <script type="text/javascript">setTimeout(function () { alert('Không tìm thấy film bạn muốn tìm!'); }, 5000);</script>
     }
 
     if (userID.IsEmpty())
     {
-        <script type="text/javascript">setTimeout(function () {alert('Xin hãy đăng nhập trước khi sử dụng');}, 5000);</script>
+        <script type="text/javascript">setTimeout(function () { alert('Xin hãy đăng nhập trước khi sử dụng'); }, 5000);</script>
     }
 
     var filmInfo = db.Query("SELECT * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim WHERE MaPhim = '" + filmID + "'").ElementAt(0);
@@ -41,10 +41,88 @@
     if (Session["userID"] != "" && Session["userID"] != null)
     {
         currentUserInfo = db.Query("SELECT * FROM Users WHERE MaNguoiDung = '" + userID + "'").ElementAt(0);
+        bool result = insertComment();
+        if (result)
+        {
+            commentList = db.Query("SELECT * FROM BinhLuanPhim JOIN Users ON BinhLuanPhim.MaNguoiDung = Users.MaNguoiDung WHERE MaPhim = '" + filmID + "'");
+        }
+
+        db.Close();
+    }
+}
+
+@functions{
+
+    public string comment { get; set; }
+    public string action { get; set; }
+
+    public bool insertComment()
+    {
+        if (IsPost)
+        {
+            action = Request.Form["action"];
+            if (action == "filmComment")
+            {
+                comment = Request.Form["comment"];
+
+                try
+                {
+                    var db = Database.Open("DefaultConnection");
+                    var index = getMaxCommentID();
+                    var result = db.Query("INSERT INTO BinhLuanPhim VALUES('" + index + "','" + Session["userID"] + "',N'" + comment + "','" + Request["filmID"].ToString() + "',0,'" + DateTime.Now + "');");
+                    db.Close();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+
+            }
+        }
+        return false;
     }
 
+    public string getMaxCommentID()
+    {
+        var db = Database.Open("DefaultConnection");
 
-    db.Close();
+        var commentInfo = db.Query("SELECT MAX(MaBinhLuanPhim) AS MaxMaBL FROM BinhLuanPhim");
+        db.Close();
+
+        if (commentInfo.Count() > 0)
+        {
+            string maxCommentID = commentInfo.ElementAt(0).MaxMaBL;
+            //string index = (int.Parse(maxCommentID.Substring(2, 4)) + 1).ToString();
+            string index = (int.Parse(maxCommentID.Substring(2, 4))).ToString();
+            switch (index.Length)
+            {
+                case 1:
+                    index = "000" + index;
+                    break;
+                case 2:
+                    index = "00" + index;
+                    break;
+                case 3:
+                    index = "0" + index;
+                    break;
+            }
+
+            return maxCommentID.Substring(0, 2) + index;
+        }
+        else
+        {
+            return "BL0001";
+        }
+
+
+    }
+
+    public void increaseEvaluation()
+    {
+        var db = Database.Open("DefaultConnection");
+
+    }
 }
 
 <!--Style for element in page-->
@@ -159,6 +237,14 @@
                     }
                 });
             }
+
+            $('.like-btn').on('click', function () {
+
+            });
+
+            $('.dislike-btn').on('click', function () {
+
+            });
         });
     </script>
 }
@@ -269,61 +355,66 @@
     <div class="container">
         <div class="comments-content">
             <h3 class="title">Bình luận về tác phẩm</h3>
-            @foreach (var comment in commentList)
+            @if (commentList.Count() > 0)
             {
-                <div class="comment-container">
-                    <i class="fa fa-close"></i>
-                    <div class="comment">
-                        <div class="col-md-1 col-xs-4 block">
-                            <div class="comment-vote">
-                                <i class="like-btn fa fa-caret-up"></i>
-                                <p class="number-like">5</p>
-                                <i class="dislike-btn fa fa-caret-down"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-xs-8 block">
-                            <div class="user">
-                                <div class="avatar">
-                                    <img src="@comment.HinhAnhNguoiDung">
-                                </div>
-                                <div class="user-info">
-                                    @{
-                                        string userName = comment.TenNguoiDung as string;
-                                        if (userName.Length > 16)
-                                        {
-                                            <p class="name">@userName.Substring(0, 13)...</p>
-                                        }
-                                        else
-                                        {
-                                            <p class="name">@userName</p>
-                                        }
-                                    }
-                                    <p class="type-user">@comment.LoaiND</p>
-                                    <p class="score">@comment.Level</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9 col-xs-12 block">
-                            <div class="comment-content">
-                                <div class="top-block row">
-                                    <p class="date-time-comment">@comment.ThoiGian</p>
-                                </div>
-                                <div class="mid-block">
-                                    <div class="comment-text">
-                                        <p class="text">@comment.BinhLuanPhim</p>
+                <div style="height: 700px; overflow:auto;">
+                    @foreach (var comment in commentList)
+                    {
+                        <div class="comment-container">
+                            <i class="fa fa-close"></i>
+                            <div class="comment">
+                                <div class="col-md-1 col-xs-4 block">
+                                    <div class="comment-vote">
+                                        <i class="like-btn fa fa-caret-up"></i>
+                                        <p class="number-like">@comment.DanhGia</p>
+                                        <i class="dislike-btn fa fa-caret-down"></i>
                                     </div>
                                 </div>
-                                <div class="bottom-block row">
-                                    <div class="block col-md-6 col-xs-6">
-                                        <p class="amount-of-response"></p>
+                                <div class="col-md-2 col-xs-8 block">
+                                    <div class="user">
+                                        <div class="avatar">
+                                            <img src="@comment.HinhAnhNguoiDung">
+                                        </div>
+                                        <div class="user-info">
+                                            @{
+                                                string userName = comment.TenNguoiDung as string;
+                                                if (userName.Length > 16)
+                                                {
+                                                    <p class="name">@userName.Substring(0, 13)...</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="name">@userName</p>
+                                                }
+                                            }
+                                            <p class="type-user">@comment.LoaiND</p>
+                                            <p class="score">@comment.Level</p>
+                                        </div>
                                     </div>
-                                    <div class="block col-md-6 col-xs-6">
-                                        @*<a><div class="btn see-response-btn">Xem phản hồi</div></a>*@
+                                </div>
+                                <div class="col-md-9 col-xs-12 block">
+                                    <div class="comment-content">
+                                        <div class="top-block row">
+                                            <p class="date-time-comment">@comment.ThoiGian</p>
+                                        </div>
+                                        <div class="mid-block">
+                                            <div class="comment-text">
+                                                <p class="text">@comment.BinhLuanPhim</p>
+                                            </div>
+                                        </div>
+                                        <div class="bottom-block row">
+                                            <div class="block col-md-6 col-xs-6">
+                                                <p class="amount-of-response"></p>
+                                            </div>
+                                            <div class="block col-md-6 col-xs-6">
+                                                @*<a><div class="btn see-response-btn">Xem phản hồi</div></a>*@
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             }
             @if (Session["userID"] != "" && Session["userID"] != null)
@@ -351,10 +442,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-10 col-xs-12 block">
-                        <textarea class="comment-area"></textarea>
+                    <form class="col-md-10 col-xs-12 block" method="post">
+                        <textarea class="comment-area" name="comment"></textarea>
+                        <input type="hidden" name="action" value="filmComment" />
                         <input type="submit" class="btn comment-btn" value="BÌNH LUẬN">
-                    </div>
+                    </form>
                 </div>
             }
         </div>

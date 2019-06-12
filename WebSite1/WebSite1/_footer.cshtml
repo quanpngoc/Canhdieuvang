@@ -91,6 +91,7 @@
         {
             account = Request.Form["account"];
             password = Request.Form["password"];
+            encodePassword();
             action = Request.Form["action"];
 
             if(action == "login")
@@ -138,7 +139,13 @@
 
         db.Close();
     }
+
+    public void encodePassword()
+    {
+        if(password != null && password != "")
+            password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(password.Trim(), "SHA1");
     }
+}
 
 <div id="login-popup">
     <i class="fa fa-close close-login-popup"></i>

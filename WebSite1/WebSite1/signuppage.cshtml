@@ -41,6 +41,7 @@
         {
             account = Request.Form["account"];
             password = Request.Form["password"];
+            encodePassword();
             username = Request.Form["username"];
             email = Request.Form["email"];
             birthday = Request.Form["birthday"];
@@ -51,7 +52,7 @@
             avatar = WebImage.GetImageFromRequest();
             var newFileName = "";
             var imagePath = "";
-            
+
             if (account == "" || password == "" || username == "" || email == "" || birthday == "")
             {
                 result = 1;
@@ -129,6 +130,12 @@
         return maxUserID.Substring(0, 2)+index;
         db.Close();
     }
+
+    public void encodePassword()
+    {
+        if(password != null && password != "")
+            password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(password.Trim(), "SHA1");
+    }
 }
 
 <!--Style for element in page-->
@@ -170,6 +177,10 @@
                 <div class="attr-element">
                     <label>Địa chỉ email:</label>
                     <input type="email" name="email" placeholder="Nhập địa chỉ email">
+                </div>
+                <div class="attr-element">
+                    <label>Số điện thoại (nếu có):</label>
+                    <input type="text" name="phonenumber" placeholder="Nhập số điện thoại">
                 </div>
                 <div class="attr-element">
                     <label>Địa chỉ facebook (nếu có):</label>

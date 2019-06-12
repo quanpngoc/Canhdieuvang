@@ -71,11 +71,19 @@
                         avatarPath += newFileName.ToString();
                         avatar.Save(@"~\" + imagePath);
                     }
+                    else
+                    {
+                        avatarPath = "Images/avatar/nene.jpg";
+                    }
                     var insertResult = insertAccount();
                     if (insertResult == true)
                         result = 2;
                     else
                         result = 1;
+                }
+                else
+                {
+                    result = 1;
                 }
             }
         }
@@ -89,7 +97,7 @@
         var index = getMaxUserID();
         var accountInfo = db.Query("INSERT INTO Users VALUES('"+index+"',N'"+username+"','"+account+"','"+password+"','"+avatarPath+"','"+birthday+"','"+email+"','"+phonenumber+"','"+facebook+"',0,N'Khán giả');");
 
-        if (accountInfo != null)
+        if (checkAccountExist())
             return true;
 
         return false;
@@ -164,7 +172,7 @@
                 </div>
                 <div class="attr-element">
                     <label>Mật khẩu:</label>
-                    <input type="password" name="password" placeholder="Nhập họ tên của bạn">
+                    <input type="password" name="password" placeholder="Nhập mật khẩu">
                 </div>
                 <div class="attr-element">
                     <label>Họ tên:</label>

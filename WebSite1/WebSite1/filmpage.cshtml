@@ -25,17 +25,12 @@
         <script type="text/javascript">setTimeout(function () { alert('Không tìm thấy film bạn muốn tìm!'); }, 5000);</script>
     }
 
-    if (userID.IsEmpty())
-    {
-        <script type="text/javascript">setTimeout(function () { alert('Xin hãy đăng nhập trước khi sử dụng'); }, 5000);</script>
-    }
-
     var filmInfo = db.Query("SELECT * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim WHERE MaPhim = '" + filmID + "'").ElementAt(0);
     var filmImgList = db.Query("SELECT * FROM HinhAnhPhim WHERE MaPhim = '" + filmID + "'");
     var filmAwardList = db.Query("SELECT TenGiaiThuongPhim, Nam, NoiDungGiaiThuong, HinhAnhGT FROM GiaiThuongPhim WHERE MaPhim = '" + filmID + "'");
     var othersFilm = db.Query("SELECT DISTINCT TOP 8 Phim.MaPhim, TenPhim, Link " +
         "FROM Phim INNER JOIN HinhAnhPhim ON Phim.MaHinhAnhPhim = HinhAnhPhim.MaHinhAnhPhim");
-    var commentList = db.Query("SELECT * FROM BinhLuanPhim JOIN Users ON BinhLuanPhim.MaNguoiDung = Users.MaNguoiDung WHERE MaPhim = '" + filmID + "'");
+    var commentList = db.Query("SELECT * FROM BinhLuanPhim JOIN Users ON BinhLuanPhim.MaNguoiDung = Users.MaNguoiDung WHERE MaPhim = '" + filmID + "' ORDER BY DanhGia desc");
 
     var currentUserInfo = db.Query("SELECT TOP 1 MaNguoiDung FROM Users").ElementAt(0);
     if (Session["userID"] != "" && Session["userID"] != null)
@@ -67,11 +62,14 @@
 
                 try
                 {
-                    var db = Database.Open("DefaultConnection");
-                    var index = getMaxCommentID();
-                    var result = db.Query("INSERT INTO BinhLuanPhim VALUES('" + index + "','" + Session["userID"] + "',N'" + comment + "','" + Request["filmID"].ToString() + "',0,'" + DateTime.Now + "');");
-                    db.Close();
-                    return true;
+                    if(comment != null && comment != "")
+                    {
+                        var db = Database.Open("DefaultConnection");
+                        var index = getMaxCommentID();
+                        var result = db.Query("INSERT INTO BinhLuanPhim VALUES('" + index + "','" + Session["userID"] + "',N'" + comment + "','" + Request["filmID"].ToString() + "',0,'" + DateTime.Now + "');");
+                        db.Close();
+                        return true;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -90,11 +88,11 @@
         var commentInfo = db.Query("SELECT MAX(MaBinhLuanPhim) AS MaxMaBL FROM BinhLuanPhim");
         db.Close();
 
-        if (commentInfo.Count() > 0)
+        if (commentInfo.Count() > 0 && commentInfo.ElementAt(0).MaxMaBL != null)
         {
             string maxCommentID = commentInfo.ElementAt(0).MaxMaBL;
-            //string index = (int.Parse(maxCommentID.Substring(2, 4)) + 1).ToString();
-            string index = (int.Parse(maxCommentID.Substring(2, 4))).ToString();
+            string index = (int.Parse(maxCommentID.Substring(2, 4)) + 1).ToString();
+            //string index = (int.Parse(maxCommentID.Substring(2, 4))).ToString();
             switch (index.Length)
             {
                 case 1:
@@ -114,8 +112,6 @@
         {
             return "BL0001";
         }
-
-
     }
 
     public void increaseEvaluation()
@@ -357,7 +353,7 @@
             <h3 class="title">Bình luận về tác phẩm</h3>
             @if (commentList.Count() > 0)
             {
-                <div style="height: 700px; overflow:auto;">
+                <div style="max-height: 700px; overflow:auto;">
                     @foreach (var comment in commentList)
                     {
                         <div class="comment-container">

@@ -9,7 +9,7 @@
 
 
 
-    var famousFilmList = db.Query("SELECT TOP 10 * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim ORDER BY NEWID(), DanhGiaPhim desc, MaPhim asc");
+    var famousFilmList = db.Query("SELECT TOP 10 * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim ORDER BY DanhGiaPhim desc, MaPhim asc");
     var topFilmInWeek = db.Query("SELECT TOP 5 * FROM Phim INNER JOIN LoaiPhim ON Phim.MaLoaiPhim = LoaiPhim.MaLoaiPhim WHERE NoiBatTuan > 0 ORDER BY NEWID(), NoiBatTuan desc ");
 
     db.Close();

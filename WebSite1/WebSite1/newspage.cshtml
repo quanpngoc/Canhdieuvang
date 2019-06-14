@@ -4,6 +4,7 @@
 }
 
 @{
+    
     var db = Database.Open("DefaultConnection");
 
     if (db == null)
@@ -19,14 +20,16 @@
     }
 
     var newInfo = db.Query("SELECT * FROM TinTuc WHERE MaTinTuc = '" + newID + "'").ElementAt(0);
-    var newsList = db.Query("SELECT TOP 3 MaTinTuc, TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc WHERE MaTinTuc <> '"+ newID +"' ORDER BY NgayDang desc");
+    var newsList = db.Query("SELECT TOP 3 MaTinTuc, TieuDe, GioiThieuTT, LinkAnhBia FROM TinTuc WHERE MaTinTuc <> '"+ newID +"' ORDER BY NEWID(), NgayDang desc");
 
     db.Close();
 }
 
 @functions{
+    string[] Date = new string[3];
+    string[] Time = new string[2];
 
-    public void splitDateTime(string datetime, string[] Date, string[] Time)
+    public void splitDateTime(string datetime)
     {
         Date = datetime.Split('-');
         Time = Date[2].Split(' ');
@@ -131,9 +134,7 @@
                 <div class="contact">
                     <div class="post-date">
                         @{
-                            string[] Date = new string[3];
-                            string[] Time = new string[2];
-                            splitDateTime(@newInfo.NgayDang, Date, Time);
+                            splitDateTime(@newInfo.NgayDang);
                         }
                         <p>@Date[0]</p>
                         <p>@changeMonthToString(Date[1])</p>
@@ -153,27 +154,22 @@
                         <p class="author">@newInfo.NguoiDang</p>
                     </div>
                     <hr>
-                    @*<div class="main-text">
-                        <script type="text/javascript">
-                            $('document').ready(function () {
-                                $('.main-text').html('@newInfo.NoiDungTT');
-                            })
-                        </script>
-                    </div>*@
                     @if (newInfo.noidungtt != null && newInfo.NoiDungTT != "")
                     {
-                    <div class="main-text">@{
-                        StringWriter stringWriter = new StringWriter();
-                        HtmlTextWriter writer = new HtmlTextWriter(stringWriter);
-                        writer.WriteLine(newInfo.NoiDungTT);
-                        }
-                    </div>
+                        var text = Html.Raw(newInfo.NoiDungTT);
+                        <div class="main-text">
+                            <script type="text/javascript">
+                                $('document').ready(function () {
+                                    $('.main-text').html('@text');
+                                })
+                            </script>
+                        </div>
                     }
                     else
                     {
                         <div class="main-text">@newInfo.GioiThieuTT</div>
                     }
-                </div>
+                    </div>
                 </div>
         </div>
 

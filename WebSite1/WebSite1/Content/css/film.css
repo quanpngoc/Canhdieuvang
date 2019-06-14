@@ -267,6 +267,10 @@ body .comments .comments-content .comment-container .comment .comment-vote .like
   width: 100%;
   font-size: 30px; }
 
+body .comments .comments-content .comment-container .comment .comment-vote .like-btn:hover, body .comments .comments-content .comment-container .comment .comment-vote .dislike-btn:hover{
+    cursor: pointer;
+}
+
 body .comments .comments-content .comment-container .comment .comment-vote .number-like, body .comments .comments-content .comment-maker .comment .comment-vote .number-like {
   width: 60px;
   height: 60px;

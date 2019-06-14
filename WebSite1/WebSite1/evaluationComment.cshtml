@@ -1,0 +1,33 @@
+﻿@{
+    string input;
+    using (var reader = new StreamReader(Request.InputStream))
+    {
+        input = reader.ReadToEnd();
+    }
+
+    string commentID = Request.Form[0];
+    string userID = Request.Form[1];
+    string type = Request.Form[2];
+
+    float evaluation = 0;
+    if (type == "0")
+    {
+        Functions.increaseFilmEvaluation(commentID, userID);
+        evaluation = Functions.getFilmCommentEvaluation(commentID);
+    }
+    else if(type=="1"){
+        Functions.descreaseFilmEvaluation(commentID, userID);
+        evaluation = Functions.getFilmCommentEvaluation(commentID);
+    }
+    else if (type == "2")
+    {
+        Functions.increaseFilmEvaluation(commentID, userID);
+        evaluation = Functions.getFilmCommentEvaluation(commentID);
+    }
+    else if(type=="3"){
+        Functions.descreaseFilmEvaluation(commentID, userID);
+        evaluation = Functions.getFilmCommentEvaluation(commentID);
+    }
+}
+
+<div>@evaluation</div>

@@ -1,0 +1,157 @@
+﻿@functions{
+
+
+    #region film evaluation
+    public static float getFilmCommentEvaluation(string commentID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        IEnumerable<dynamic> result = null;
+        if (commentID != "" && commentID != null)
+        {
+            result = db.Query("SELECT DanhGia FROM BinhLuanPhim WHERE MaBinhLuanPhim = '"+commentID+"'");
+            return result.ElementAt(0).DanhGia;
+        }
+
+        db.Close();
+        return 0;
+    }
+
+    public static void increaseFilmEvaluation(string commentID, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (commentID != "" && commentID != null)
+        {
+
+            if (getEvaluationNumber(userID) > 0)
+            {
+                float commentEvaluation = getFilmCommentEvaluation(commentID);
+
+                db.Query("UPDATE BinhLuanPhim SET DanhGia = " + Math.Round(commentEvaluation + 0.2, 1) + " WHERE MaBinhLuanPhim = '" + commentID + "'");
+
+                int numberOfEvaluation = getEvaluationNumber(userID);
+                descreateEvaluationNumber(numberOfEvaluation, userID);
+            }
+        }
+        db.Close();
+    }
+
+    public static void descreaseFilmEvaluation(string commentID, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (commentID != "" && commentID != null)
+        {
+            if (getEvaluationNumber(userID) > 0)
+            {
+                float commentEvaluation = getFilmCommentEvaluation(commentID);
+
+                db.Query("UPDATE BinhLuanPhim SET DanhGia = " + Math.Round(commentEvaluation - 0.2, 1) + " WHERE MaBinhLuanPhim = '" + commentID + "'");
+
+                int numberOfEvaluation = getEvaluationNumber(userID);
+                descreateEvaluationNumber(numberOfEvaluation, userID);
+            }
+        }
+
+        db.Close();
+    }
+    #endregion
+
+    #region actor evaluation
+    public static float getActorCommentEvaluation(string commentID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        IEnumerable<dynamic> result = null;
+        if (commentID != "" && commentID != null)
+        {
+            result = db.Query("SELECT DanhGia FROM BinhLuanPhim WHERE MaBinhLuanPhim = '"+commentID+"'");
+            return result.ElementAt(0).DanhGia;
+        }
+
+        db.Close();
+        return 0;
+    }
+
+    public static void increaseActorEvaluation(string commentID, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (commentID != "" && commentID != null)
+        {
+            if (getEvaluationNumber(userID) > 0)
+            {
+                float commentEvaluation = getActorCommentEvaluation(commentID);
+
+                db.Query("UPDATE BinhLuanPhim SET DanhGia = " + Math.Round(commentEvaluation + 0.2, 1) + " WHERE MaBinhLuanPhim = '" + commentID + "'");
+
+                int numberOfEvaluation = getEvaluationNumber(userID);
+                descreateEvaluationNumber(numberOfEvaluation, userID);
+            }
+        }
+
+        db.Close();
+    }
+
+    public static void descreaseActorEvaluation(string commentID, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (commentID != "" && commentID != null)
+        {
+            if (getEvaluationNumber(userID) > 0)
+            {
+                float commentEvaluation = getActorCommentEvaluation(commentID);
+
+                db.Query("UPDATE BinhLuanPhim SET DanhGia = " + Math.Round(commentEvaluation - 0.2, 1) + " WHERE MaBinhLuanPhim = '" + commentID + "'");
+
+                int numberOfEvaluation = getEvaluationNumber(userID);
+                descreateEvaluationNumber(numberOfEvaluation, userID);
+            }
+        }
+
+        db.Close();
+    }
+    #endregion
+
+    #region execute evaluation number
+    public static int getEvaluationNumber(string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+        IEnumerable<dynamic> result = null;
+        if (userID != "" && userID != null)
+        {
+            result = db.Query("SELECT LuotDanhGia FROM Users WHERE MaNguoiDung='"+userID+"'");
+            return Convert.ToInt16(result.ElementAt(0).LuotDanhGia);
+        }
+
+        db.Close();
+        return 0;
+    }
+
+    public static void increaseEvaluationNumber(int numberOfEvaluation, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (userID != "" && userID != null)
+        {
+            db.Query("UPDATE Users SET LuotDanhGia = " + (numberOfEvaluation + 1) + " WHERE MaNguoiDung = '" + userID + "'");
+        }
+
+        db.Close();
+    }
+
+    public static void descreateEvaluationNumber(int numberOfEvaluation, string userID)
+    {
+        var db = Database.Open("DefaultConnection");
+
+        if (userID != "" && userID != null)
+        {
+            db.Query("UPDATE Users SET LuotDanhGia = " + (numberOfEvaluation - 1) + " WHERE MaNguoiDung = '" + userID + "'");
+        }
+
+        db.Close();
+    }
+    #endregion
+}

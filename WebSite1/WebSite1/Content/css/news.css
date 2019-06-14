@@ -103,7 +103,7 @@ body #news .new-content .content .text .title {
 
 body #news .new-content .content .text .main-text img {
   width: 100%;
-  height: 75%;
+  height: auto;
   padding: 3%; }
 
 body #news .news-related .news-related-title {

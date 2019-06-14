@@ -5,6 +5,7 @@
 }
 
 @{
+    
     var db = Database.Open("DefaultConnection");
 
     if (db == null)
@@ -40,6 +41,8 @@
         if (result)
         {
             commentList = db.Query("SELECT * FROM BinhLuanPhim JOIN Users ON BinhLuanPhim.MaNguoiDung = Users.MaNguoiDung WHERE MaPhim = '" + filmID + "'");
+            int numberOfEvaluation = Functions.getEvaluationNumber(Session["userID"].ToString());
+            Functions.increaseEvaluationNumber(numberOfEvaluation, Session["userID"].ToString());
         }
 
         db.Close();
@@ -62,7 +65,7 @@
 
                 try
                 {
-                    if(comment != null && comment != "")
+                    if (comment != null && comment != "")
                     {
                         var db = Database.Open("DefaultConnection");
                         var index = getMaxCommentID();
@@ -112,12 +115,6 @@
         {
             return "BL0001";
         }
-    }
-
-    public void increaseEvaluation()
-    {
-        var db = Database.Open("DefaultConnection");
-
     }
 }
 
@@ -235,11 +232,39 @@
             }
 
             $('.like-btn').on('click', function () {
-
+                if ("@Session["userID"]" != "") {
+                    var commentID = $(this).parent().attr("data-comment-id");
+                    var data = { commentID: commentID, userID: '@Session["userID"]', type: '0'};
+                    $.ajax({
+                        type: "POST",
+                        url: "/evaluationComment",
+                        data: data,
+                        datatype: "html",
+                        success: function (data) {
+                            $('.comment-vote[data-comment-id=' + commentID + '] .number-like').html(data);
+                        }
+                    });
+                } else {
+                    setTimeout(function () { alert("Xin hãy đăng nhập trước khi vote bình luận!"); }, 100);
+                }
             });
 
             $('.dislike-btn').on('click', function () {
-
+                if ("@Session["userID"]" != "") {
+                    var commentID = $(this).parent().attr("data-comment-id");
+                    var data = { commentID: commentID, userID: '@Session["userID"]', type: '1'};
+                    $.ajax({
+                        type: "POST",
+                        url: "/evaluationComment",
+                        data: data,
+                        datatype: "html",
+                        success: function (data) {
+                            $('.comment-vote[data-comment-id=' + commentID + '] .number-like').html(data);
+                        }
+                    });
+                } else {
+                    setTimeout(function () { alert("Xin hãy đăng nhập trước khi vote bình luận!"); }, 100);
+                }
             });
         });
     </script>
@@ -270,19 +295,29 @@
         <div class="main-info col-md-7">
             <div class="content">
                 <h3 class="name">@filmInfo.TenPhim</h3>
-                @{string[] content = filmInfo.NoiDungPhim.Split(';');}
-                @foreach (var str in content)
-                {<p class="text">@str</p>}
+                @if (filmInfo.NoiDungPhim != null)
+                {
+                    string[] content = filmInfo.NoiDungPhim.Split(';');
+                    foreach (var str in content)
+                    {<p class="text">@str</p>}
+            }
 
                 <p class="text">Giới thiệu về nội dung</p>
-                @{string[] introContentFilm = filmInfo.GioiThieuNoiDung.Split(';');}
-                @foreach (var str in introContentFilm)
-                {<p class="text">@str</p>}
+                @if (filmInfo.GioiThieuNoiDung != null)
+                {
+                    string[] introContentFilm = filmInfo.GioiThieuNoiDung.Split(';');
+                    foreach (var str in introContentFilm)
+                    {<p class="text">@str</p>}
+            }
 
                 <p class="text">Nội dung phim</p>
-                @{string[] contentFilm = filmInfo.NoiDungPhim.Split(';');}
-                @foreach (var str in contentFilm)
-                {<p class="text">@str</p>}
+                @if (filmInfo.GioiThieuNoiDung != null)
+                {
+                    string[] contentFilm = filmInfo.NoiDungPhim.Split(';');
+                    foreach (var str in contentFilm)
+                    {<p class="text">@str</p>}
+                }
+
             </div>
         </div>
     </div>
@@ -336,9 +371,12 @@
                             </div>
                             <div class="award-content">
                                 <div class="name">@award.TenGiaiThuongPhim - @award.Nam</div>
-                                @{string[] awardContent = award.NoiDungGiaiThuong.Split(';');}
-                                @foreach (var str in awardContent)
-                                {<p class="text">@str</p>}
+                                @if (award.NoiDungGiaiThuong != null)
+                                {
+                                    string[] awardContent = award.NoiDungGiaiThuong.Split(';');
+                                    foreach (var str in awardContent)
+                                    {<p class="text">@str</p>}
+                                }
                             </div>
                         </div>
                     </div>
@@ -360,7 +398,7 @@
                             <i class="fa fa-close"></i>
                             <div class="comment">
                                 <div class="col-md-1 col-xs-4 block">
-                                    <div class="comment-vote">
+                                    <div class="comment-vote" data-comment-id="@comment.MaBinhLuanPhim">
                                         <i class="like-btn fa fa-caret-up"></i>
                                         <p class="number-like">@comment.DanhGia</p>
                                         <i class="dislike-btn fa fa-caret-down"></i>

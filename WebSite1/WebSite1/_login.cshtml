@@ -8,23 +8,25 @@
         if ("@result_login.ToString()" == "1")
             setTimeout(function () {
                 alert("Đăng nhập không thành công, xin hãy kiểm tra lại!");
-            }, 5000);
-        else if ("@result_login.ToString()" == "2") {
+            }, 100);
+        else if ("@result_login.ToString()" == "2") { 
             setTimeout(function () {
                 alert("Đăng nhập thành công!");
-            }, 5000);
+            }, 100);
             $('.user-avatar img').attr('src', '@Session["accountImgUrl"]');
             $('#contact-us #customerName').val('@Session["userName"]');
             $('#contact-us #customerEmail').val('@Session["userEmail"]');
+            location.reload();
         }
         else if ("@result_login.ToString()" == "4") {
             setTimeout(function () {
                 alert("Đã đăng xuất tài khoản!");
-            }, 5000);
+            }, 100);
             $('.user-avatar img').attr('src', 'Images/user-black.png');
             $('#contact-us #customerName').val('');
             $('#contact-us #customerEmail').val('');
-        } 
+            location.reload();
+        }
     </script>
 }
 
@@ -46,6 +48,11 @@
 
             if(action == "login")
             {
+                if (Session["userID"] != null && Session["userID"] != "")
+                {
+                    return 0;
+                }
+
                 IEnumerable<dynamic> accountInfo = null;
 
                 if (Validation.IsValid())
@@ -69,6 +76,10 @@
             }
             else if(action == "logout")
             {
+                if (Session["userID"] == null || Session["userID"] == "")
+                {
+                    return 0;
+                }
                 Session["userID"] = "";
                 Session["accountImgUrl"] = "";
                 Session["userName"] = "";

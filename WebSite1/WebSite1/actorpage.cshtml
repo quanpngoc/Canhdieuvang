@@ -198,6 +198,42 @@
                 });
             }
 
+            $('.like-btn').on('click', function () {
+                if ("@Session["userID"]" != "") {
+                    var commentID = $(this).parent().attr("data-comment-id");
+                    var data = { commentID: commentID, userID: '@Session["userID"]', type: '2'};
+                    $.ajax({
+                        type: "POST",
+                        url: "/evaluationComment",
+                        data: data,
+                        datatype: "html",
+                        success: function (data) {
+                            $('.comment-vote[data-comment-id=' + commentID + '] .number-like').html(data);
+                        }
+                    });
+                } else {
+                    setTimeout(function () { alert("Xin hãy đăng nhập trước khi vote bình luận!"); }, 100);
+                }
+            });
+
+            $('.dislike-btn').on('click', function () {
+                if ("@Session["userID"]" != "") {
+                    var commentID = $(this).parent().attr("data-comment-id");
+                    var data = { commentID: commentID, userID: '@Session["userID"]', type: '3'};
+                    $.ajax({
+                        type: "POST",
+                        url: "/evaluationComment",
+                        data: data,
+                        datatype: "html",
+                        success: function (data) {
+                            $('.comment-vote[data-comment-id=' + commentID + '] .number-like').html(data);
+                        }
+                    });
+                } else {
+                    setTimeout(function () { alert("Xin hãy đăng nhập trước khi vote bình luận!"); }, 100);
+                }
+            });
+
         });
     </script>
 }
@@ -300,7 +336,7 @@
                             <i class="fa fa-close"></i>
                             <div class="comment">
                                 <div class="col-md-1 col-xs-4 block">
-                                    <div class="comment-vote">
+                                    <div class="comment-vote" data-comment-id="@comment.MaBinhLuanDV">
                                         <i class="like-btn fa fa-caret-up"></i>
                                         <p class="number-like">@comment.DanhGia</p>
                                         <i class="dislike-btn fa fa-caret-down"></i>
